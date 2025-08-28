@@ -1,235 +1,105 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <title>Suivi des Dépenses</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      background: #f4f4f9;
-      color: #333;
-      transition: background 0.3s, color 0.3s;
-    }
-    header {
-      padding: 1rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: #6200ea;
-      color: white;
-    }
-    header h1 {
-      font-size: 1.2rem;
-    }
-    .container {
-      padding: 1rem;
-    }
-    form {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-bottom: 1rem;
-    }
-    input, select, button {
-      padding: 0.5rem;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-    }
-    button {
-      cursor: pointer;
-      background: #6200ea;
-      color: white;
-      border: none;
-      transition: transform 0.2s;
-    }
-    button:hover {
-      transform: scale(1.05);
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 1rem;
-    }
-    th, td {
-      padding: 0.8rem;
-      border: 1px solid #ddd;
-      text-align: left;
-    }
-    th {
-      background: #eee;
-    }
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Suivi Dépenses</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+  :root{
+    --bg:#f4f6f8; --card:#fff; --text:#222; --accent:#102E50; --accent-2:#E78B48;
+    --ok:#F5C45E; --warn:#E78B48; --danger:#BE3D2A;
+  }
+  body{font-family:'Cairo',sans-serif;margin:0;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;}
+  header{background:var(--accent);color:#fff;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;}
+  #welcomeMessage{font-weight:700;font-size:1rem;}
+  #headerRight{display:flex;gap:8px;align-items:center;font-size:0.95rem;}
+  button,select,input{font-family:inherit}
+  main{max-width:920px;margin:18px auto;padding:18px;background:var(--card);border-radius:12px;box-shadow:0 6px 20px rgba(0,0,0,0.06);}
+  .controls{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;align-items:center;}
+  input[type="text"],input[type="number"],input[type="month"],select{padding:10px;border-radius:8px;border:1px solid #dcdcdc;font-size:1rem}
+  button{background:var(--accent);color:white;border:none;padding:10px 12px;border-radius:8px;cursor:pointer;font-weight:600;}
+  button.ghost{background:#fff;color:var(--accent);border:1px solid #ddd}
+  button.small{padding:6px 8px;font-size:0.9rem}
+  form#addForm{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;align-items:center}
+  #depenses{margin-top:12px;display:flex;flex-direction:column;gap:8px;max-height:360px;overflow:auto;padding-bottom:6px}
+  .depense{display:flex;justify-content:space-between;align-items:center;padding:10px;border-radius:10px;background:#fbfbfd;border:1px solid #eee;transition:all .18s}
+  .depense:hover{transform:translateY(-3px)}
+  .depense .left{display:flex;gap:10px;align-items:center;flex:1}
+  .depense .label{font-weight:600}
+  .depense .amount{font-weight:700;color:var(--accent)}
+  .depense button.delete{background:transparent;border:none;color:#a33;font-size:1.05rem;cursor:pointer}
 
-    /* ✅ Responsive table en mode mobile (iPhone, etc.) */
-    @media (max-width: 768px) {
-      table {
-        display: block;
-        border: 0;
-      }
-      thead {
-        display: none;
-      }
-      tr {
-        display: block;
-        margin-bottom: 1rem;
-        border: 1px solid #ddd;
-        border-radius: 10px;
-        padding: 0.5rem;
-        background: #fff;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      }
-      td {
-        display: flex;
-        justify-content: space-between;
-        padding: 0.4rem 0.6rem;
-        border: none;
-        border-bottom: 1px solid #eee;
-      }
-      td:last-child {
-        border-bottom: none;
-      }
-      td::before {
-        content: attr(data-label);
-        font-weight: bold;
-        color: #333;
-      }
-    }
+  /* mobile cards */
+  @media (max-width:768px){
+    main{margin:8px;border-radius:0}
+    .depense{flex-direction:column;align-items:flex-start;padding:12px;gap:6px}
+    .depense .row{width:100%;display:flex;justify-content:space-between;align-items:center}
+    .depense .meta{font-size:0.9rem;color:#666}
+    .controls{flex-direction:column;align-items:stretch}
+    form#addForm{flex-direction:column;align-items:stretch}
+    input,select,button{width:100%}
+  }
 
-    /* ✅ Dark Mode */
-    .dark {
-      background: #121212;
-      color: #f4f4f9;
-    }
-    .dark header {
-      background: #333;
-    }
-    .dark table, .dark td, .dark th {
-      border-color: #555;
-    }
-    .dark td::before {
-      color: #ddd;
-    }
-  </style>
+  /* progress / stats */
+  .progress-container{width:100%;height:14px;background:#eee;border-radius:999px;overflow:hidden;margin:8px 0}
+  .progress-bar{height:100%;width:0;background:linear-gradient(90deg,var(--ok),var(--warn),var(--danger));transition:width .6s ease}
+
+  /* chart */
+  canvas{max-width:320px;margin:12px auto;display:block}
+
+  /* alert */
+  #alerte{display:none;padding:8px;border-radius:8px;color:#fff;margin-bottom:12px;font-weight:700}
+  #alerte.orange{background:var(--warn);display:block}
+  #alerte.rouge{background:var(--danger);display:block}
+
+  /* dark mode */
+  body.dark{background:#0f1720;color:#e6eef6}
+  body.dark main{background:#0b1220}
+  body.dark .depense{background:#0b1826;border:1px solid rgba(255,255,255,0.04)}
+  body.dark input,body.dark select{background:#091022;color:#e6eef6;border:1px solid rgba(255,255,255,0.06)}
+  body.dark button{color:#fff}
+  .top-row{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+  #monthSelect{padding:8px;border-radius:8px}
+  .hidden{display:none}
+</style>
 </head>
 <body>
-  <header>
-    <h1>Bonjour Anas</h1>
-    <button id="toggleDark">🌙 Mode sombre</button>
-  </header>
 
-  <div class="container">
-    <h2>Votre suivi des dépenses</h2>
-
-    <form id="expenseForm">
-      <input type="text" id="desc" placeholder="Description" required>
-      <input type="number" id="amount" placeholder="Montant (DH)" required>
-      <input type="date" id="date" required>
-      <select id="category">
-        <option>Alimentation</option>
-        <option>Transport</option>
-        <option>Logement</option>
-        <option>Loisirs</option>
-        <option>Autres</option>
-      </select>
-      <button type="submit">Ajouter</button>
-    </form>
-
-    <button id="exportCSV">📥 Exporter CSV</button>
-
-    <table>
-      <thead>
-        <tr>
-          <th>Description</th>
-          <th>Montant</th>
-          <th>Date</th>
-          <th>Catégorie</th>
-        </tr>
-      </thead>
-      <tbody id="expensesTable"></tbody>
-    </table>
-
-    <canvas id="expensesChart" style="max-width:400px; margin-top:20px;"></canvas>
+<header>
+  <div id="welcomeMessage">Votre suivi des dépenses</div>
+  <div id="headerRight">
+    <div id="timeDisplay"></div>
+    <button id="darkModeBtn" class="small">🌓</button>
+    <button id="changeThresholdBtn" class="small ghost" style="display:none">Modifier seuil</button>
+    <button id="logoutBtn" class="small ghost" style="display:none">Se déconnecter</button>
   </div>
+</header>
 
-  <script>
-    const form = document.getElementById("expenseForm");
-    const table = document.getElementById("expensesTable");
-    const ctx = document.getElementById("expensesChart").getContext("2d");
-    const toggleDark = document.getElementById("toggleDark");
+<main>
+  <div id="alerte"></div>
 
-    let expenses = [];
-    let chart;
-
-    // Ajouter dépense
-    form.addEventListener("submit", e => {
-      e.preventDefault();
-      const desc = document.getElementById("desc").value;
-      const amount = parseFloat(document.getElementById("amount").value);
-      const date = document.getElementById("date").value;
-      const category = document.getElementById("category").value;
-
-      const exp = { desc, amount, date, category };
-      expenses.push(exp);
-      updateTable();
-      updateChart();
-      form.reset();
-    });
-
-    // Mettre à jour le tableau
-    function updateTable() {
-      table.innerHTML = "";
-      expenses.forEach(exp => {
-        const row = `<tr>
-          <td data-label="Description">${exp.desc}</td>
-          <td data-label="Montant">${exp.amount} DH</td>
-          <td data-label="Date">${exp.date}</td>
-          <td data-label="Catégorie">${exp.category}</td>
-        </tr>`;
-        table.innerHTML += row;
-      });
-    }
-
-    // Mettre à jour le graphique
-    function updateChart() {
-      const categories = {};
-      expenses.forEach(exp => {
-        categories[exp.category] = (categories[exp.category] || 0) + exp.amount;
-      });
-
-      if (chart) chart.destroy();
-      chart = new Chart(ctx, {
-        type: "pie",
-        data: {
-          labels: Object.keys(categories),
-          datasets: [{
-            data: Object.values(categories),
-            backgroundColor: ["#ff6384","#36a2eb","#ffcd56","#4caf50","#9966ff"]
-          }]
-        }
-      });
-    }
-
-    // Exporter CSV
-    document.getElementById("exportCSV").addEventListener("click", () => {
-      let csv = "Description,Montant,Date,Catégorie\n";
-      expenses.forEach(exp => {
-        csv += `${exp.desc},${exp.amount},${exp.date},${exp.category}\n`;
-      });
-      const blob = new Blob([csv], { type: "text/csv" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "depenses.csv";
-      a.click();
-    });
-
-    // Dark Mode
-    toggleDark.addEventListener("click", () => {
-      document.body.classList.toggle("dark");
-    });
-  </script>
-</body>
-</html>
+  <!-- login modal -->
+  <div id="loginScreen" style="position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.6);">
+    <form id="loginForm" style="background:#fff;padding:20px;border-radius:12px;min-width:320px;max-width:420px;display:flex;flex-direction:column;gap:10px;">
+      <h3 id="formTitle">Connexion</h3>
+      <div style="display:flex;gap:8px;">
+        <button type="button" id="btnLogin" class="ghost" style="flex:1">Connexion</button>
+        <button type="button" id="btnRegister" class="ghost" style="flex:1">S'inscrire</button>
+      </div>
+      <input id="username" type="text" placeholder="Nom" required />
+      <input id="password" type="password" placeholder="Mot de passe" required />
+      <input id="maxThreshold" type="number" placeholder="Seuil max (MAD)" min="1" style="display:none;" />
+      <select id="secretQuestion" style="display:none">
+        <option value="">-- Question secrète --</option>
+        <option value="animal">Quel est le nom de votre premier animal ?</option>
+        <option value="ville">Quelle est votre ville natale ?</option>
+        <option value="mere">Quel est le prénom de votre mère ?</option>
+      </select>
+      <input id="secretAnswer" type="text" placeholder="Réponse secrète" style="display:none" />
+      <div style="display:flex;gap:8px">
+        <button id="submitBtn" type="submit" style="flex:1">Entrer</button>
+        <button id="forgotPasswordBtn" type="button" class="ghost" style="flex:1">Mot de passe oublié ?</button>
+      </div>
+    </fo
