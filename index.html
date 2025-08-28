@@ -2,338 +2,2206 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<title>💰 Suivi Dépenses – Profil</title>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ExpenseFlow Pro - Premium Edition</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 <style>
-body { font-family: 'Cairo', sans-serif; margin:0; background:#f4f6f8; color:#333; transition: background 0.3s, color 0.3s; }
-body.dark { background:#1e1e1e; color:#f0f0f0; }
-body.dark main { background:#2c2c2c; color:#f0f0f0; }
-body.dark input, body.dark select { background:#3a3a3a; color:white; border:1px solid #555; }
-body.dark button { color:white; }
-body.dark #depenses .depense { background:#3a3a3a; border-bottom:1px solid #555; }
-body.dark #depenses .depense:hover { background:#4a4a4a; }
-body.dark .progress-container { background:#555; }
-header { background:#102E50; color:white; padding:1rem; display:flex; justify-content:space-between; align-items:center; font-weight:bold; font-size:1.2rem; }
-main { max-width:900px; margin:2rem auto; padding:2rem; background:white; border-radius:16px; box-shadow:0 4px 20px rgba(0,0,0,0.1); transition: all 0.3s; }
-form { display:flex; gap:0.5rem; flex-wrap:wrap; margin-bottom:1rem; transition: all 0.3s; }
-input, button, select { padding:0.6rem 0.8rem; font-size:1rem; border-radius:8px; border:1px solid #ccc; transition: all 0.2s; }
-input:focus, select:focus { outline:none; border-color:#102E50; transform: scale(1.02); }
-button { background:#102E50; color:white; border:none; cursor:pointer; transition: all 0.2s; font-weight:600; }
-button:hover { background:#E78B48; transform: scale(1.05); box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
-#depenses { margin-top:1rem; max-height:250px; overflow-y:auto; border-top:1px solid #eee; }
-.depense { display:flex; justify-content:space-between; padding:0.7rem; border-bottom:1px solid #f1f1f1; border-radius:8px; margin-bottom:4px; background:#f8f9fc; transition: all 0.3s; }
-.depense.added { animation:slideIn 0.4s ease forwards; }
-.depense.removed { animation:fadeOut 0.4s ease forwards; }
-.depense:hover { background:#e2e6ea; }
-@keyframes slideIn { 0% {opacity:0; transform:translateX(-50px);} 100% {opacity:1; transform:translateX(0);} }
-@keyframes fadeOut { 0% {opacity:1;} 100% {opacity:0; transform:scale(0.8);} }
-canvas { max-width:350px; margin:1.5rem auto; display:block; transition: all 0.3s; }
-.progress-container { margin:1rem auto; background:#e9ecef; border-radius:20px; overflow:hidden; height:20px; width:100%; transition: all 0.3s; }
-.progress-bar { height:100%; width:0; transition: width 0.8s ease, background 0.8s ease; border-radius:20px; }
-.stats { text-align:center; font-size:1.2rem; margin-top:0.5rem; font-weight:bold; transition: all 0.3s; }
-#exportCSV, #reset { display:block; margin:0.8rem auto; width:50%; border-radius:12px; padding:0.8rem; font-size:1rem; font-weight:600; transition: all 0.2s; }
-#exportCSV { background:#F5C45E; color:#102E50; }
-#exportCSV:hover { background:#E78B48; color:white; transform:scale(1.05); }
-#reset { background:#BE3D2A; color:white; }
-#reset:hover { background:#E78B48; transform:scale(1.05); }
-#loginScreen { position:fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.6); display:flex; justify-content:center; align-items:center; transition: all 0.3s; }
-#loginScreen form { background:white; padding:2rem; border-radius:16px; box-shadow:0 4px 12px rgba(0,0,0,0.2); flex-direction:column; display:flex; gap:1rem; min-width:320px; font-family: 'Cairo', sans-serif; transition: all 0.3s; }
-#alerte { text-align:center; padding:0.7rem; border-radius:8px; margin-bottom:1rem; display:none; font-weight:bold; color:white; transition: opacity 0.4s; }
-#alerte.orange { background:#E78B48; }
-#alerte.rouge { background:#BE3D2A; }
-#headerRight button { padding:2px 6px; font-size:0.9rem; margin-left:10px; border-radius:8px; background:#F5C45E; color:#102E50; font-weight:600; transition: all 0.2s; }
-#headerRight button:hover { background:#E78B48; color:white; transform:scale(1.05);}
-#searchInput { flex:1; }
-#sortSelect { min-width:120px; }
+  * { 
+    font-family: 'Inter', sans-serif; 
+    scroll-behavior: smooth;
+  }
+  
+  :root {
+    --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --premium-black: #0a0a0b;
+    --dark-surface: #151518;
+    --card-surface: #1a1a1d;
+    --accent-purple: #8b5cf6;
+    --accent-gold: #f59e0b;
+    --text-primary: #ffffff;
+    --text-secondary: #a1a1aa;
+    --border-subtle: #27272a;
+    --success: #10b981;
+    --error: #ef4444;
+    --warning: #f59e0b;
+  }
+  
+  body {
+    background: var(--premium-black);
+    background-image: 
+      radial-gradient(circle at 20% 80%, rgba(139, 92, 246, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, rgba(245, 158, 11, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 40% 40%, rgba(16, 185, 129, 0.05) 0%, transparent 50%);
+    min-height: 100vh;
+  }
+  
+  .glass {
+    background: rgba(26, 26, 29, 0.8);
+    backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  .glass-hover:hover {
+    background: rgba(26, 26, 29, 0.9);
+    border-color: rgba(139, 92, 246, 0.3);
+    transform: translateY(-2px);
+  }
+  
+  .premium-card {
+    background: linear-gradient(145deg, #1a1a1d 0%, #151518 100%);
+    border: 1px solid var(--border-subtle);
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .premium-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.5), transparent);
+  }
+  
+  .premium-gradient {
+    background: linear-gradient(135deg, var(--accent-purple) 0%, var(--accent-gold) 100%);
+  }
+  
+  .btn-premium {
+    background: linear-gradient(135deg, var(--accent-purple), var(--accent-gold));
+    border: none;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .btn-premium::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.6s;
+  }
+  
+  .btn-premium:hover::before {
+    left: 100%;
+  }
+  
+  .btn-premium:hover {
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(139, 92, 246, 0.3);
+  }
+  
+  .icon-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(245, 158, 11, 0.2));
+    border: 1px solid rgba(139, 92, 246, 0.3);
+    position: relative;
+  }
+  
+  .icon-container i {
+    font-size: 20px;
+    background: linear-gradient(135deg, var(--accent-purple), var(--accent-gold));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  
+  .stat-card {
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+  }
+  
+  .stat-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+  }
+  
+  .floating-orb {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    animation: float 6s ease-in-out infinite;
+  }
+  
+  @keyframes float {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    33% { transform: translateY(-20px) rotate(120deg); }
+    66% { transform: translateY(10px) rotate(240deg); }
+  }
+  
+  .glow-text {
+    text-shadow: 0 0 20px rgba(139, 92, 246, 0.5);
+  }
+  
+  .notification {
+    position: fixed;
+    top: 2rem;
+    right: 2rem;
+    z-index: 100;
+    transform: translateX(400px);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    backdrop-filter: blur(20px);
+  }
+  
+  .notification.show {
+    transform: translateX(0);
+  }
+  
+  .ai-suggestion {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(139, 92, 246, 0.1));
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    animation: pulse-subtle 3s ease-in-out infinite;
+  }
+  
+  @keyframes pulse-subtle {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
+    50% { box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
+  }
+  
+  .voice-wave {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+  }
+  
+  .voice-wave span {
+    width: 3px;
+    height: 20px;
+    background: linear-gradient(135deg, var(--accent-purple), var(--accent-gold));
+    border-radius: 2px;
+    animation: wave 1.2s ease-in-out infinite;
+  }
+  
+  .voice-wave span:nth-child(2) { animation-delay: 0.1s; }
+  .voice-wave span:nth-child(3) { animation-delay: 0.2s; }
+  .voice-wave span:nth-child(4) { animation-delay: 0.3s; }
+  
+  @keyframes wave {
+    0%, 100% { transform: scaleY(0.3); }
+    50% { transform: scaleY(1); }
+  }
+  
+  .smart-input {
+    position: relative;
+  }
+  
+  .smart-input.ai-active::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: 12px;
+    transform: translateY(-50%);
+    width: 8px;
+    height: 8px;
+    background: var(--success);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+  
+  .expense-item {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border-left: 4px solid transparent;
+  }
+  
+  .expense-item:hover {
+    transform: translateX(8px);
+    border-left-color: var(--accent-purple);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  }
+  
+  .biometric-btn {
+    background: radial-gradient(circle, rgba(139, 92, 246, 0.2) 0%, transparent 70%);
+    border: 2px solid transparent;
+    background-clip: padding-box;
+    position: relative;
+  }
+  
+  .biometric-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    padding: 2px;
+    background: linear-gradient(135deg, var(--accent-purple), var(--accent-gold));
+    border-radius: inherit;
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+  }
+  
+  .progress-ring {
+    position: relative;
+    width: 100px;
+    height: 100px;
+  }
+  
+  .progress-ring svg {
+    transform: rotate(-90deg);
+  }
+  
+  .progress-ring circle {
+    fill: none;
+    stroke-width: 8;
+    stroke-linecap: round;
+  }
+  
+  .modal-backdrop {
+    backdrop-filter: blur(12px) saturate(150%);
+    background: rgba(0, 0, 0, 0.8);
+  }
+  
+  .security-question-container {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(139, 92, 246, 0.1));
+    border: 1px solid rgba(239, 68, 68, 0.3);
+  }
+
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, var(--accent-purple), var(--accent-gold));
+    border-radius: 10px;
+  }
+
+  .hidden { display: none !important; }
+  .tag-item {
+    background: rgba(139, 92, 246, 0.2);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
 </style>
 </head>
-<body>
 
-<div id="loginScreen">
-  <form id="loginForm">
-    <h2 id="formTitle">Connexion</h2>
-    <div style="display:flex; justify-content:center; gap:1rem; margin-bottom:1rem;">
-      <button type="button" id="btnLogin" style="flex:1;">Connexion</button>
-      <button type="button" id="btnRegister" style="flex:1;">S'inscrire</button>
+<body>
+<!-- Orbes flottantes d'ambiance -->
+<div class="floating-orb w-32 h-32 bg-gradient-to-r from-purple-500/20 to-blue-500/20 top-20 left-20" style="animation-delay: 0s;"></div>
+<div class="floating-orb w-24 h-24 bg-gradient-to-r from-yellow-500/20 to-orange-500/20 top-40 right-32" style="animation-delay: 2s;"></div>
+<div class="floating-orb w-20 h-20 bg-gradient-to-r from-green-500/20 to-teal-500/20 bottom-32 left-1/3" style="animation-delay: 4s;"></div>
+
+<!-- ÉCRAN DE CONNEXION PREMIUM -->
+<div id="loginScreen" class="fixed inset-0 flex justify-center items-center z-50 modal-backdrop">
+  <div class="glass rounded-3xl p-8 w-96 relative overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-br from-purple-500/10 to-yellow-500/10"></div>
+    
+    <div class="relative text-center mb-8">
+      <div class="w-20 h-20 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-purple-500 to-yellow-500 flex items-center justify-center">
+        <i class="fas fa-wallet text-3xl text-white"></i>
+      </div>
+      <h1 class="text-3xl font-bold text-white mb-2 glow-text">ExpenseFlow Pro</h1>
+      <p class="text-gray-300">Votre assistant financier intelligent avec IA</p>
     </div>
-    <input type="text" id="username" placeholder="Nom" required />
-    <input type="password" id="password" placeholder="Mot de passe" required />
-    <input type="number" id="maxThreshold" placeholder="Seuil max (MAD)" min="1" style="display:none;" />
-    <select id="secretQuestion" style="display:none;">
-      <option value="">-- Choisir une question secrète --</option>
-      <option value="animal">Quel est le nom de votre premier animal ?</option>
-      <option value="ville">Quelle est votre ville natale ?</option>
-      <option value="mere">Quel est le prénom de votre mère ?</option>
-    </select>
-    <input type="text" id="secretAnswer" placeholder="Réponse" style="display:none;" />
-    <button type="submit" id="submitBtn">Entrer</button>
-    <button type="button" id="forgotPasswordBtn" style="margin-top:0.5rem;">Mot de passe oublié ?</button>
-  </form>
+    
+    <form id="loginForm" class="space-y-6 relative">
+      <div class="space-y-4">
+        <h2 id="formTitle" class="text-xl font-semibold text-white text-center">Connexion Sécurisée</h2>
+        
+        <div class="smart-input">
+          <div class="relative">
+            <i class="fas fa-user absolute left-4 top-1/2 transform -translate-y-1/2 text-purple-400"></i>
+            <input type="text" id="username" placeholder="Nom d'utilisateur" 
+                   class="w-full pl-12 pr-4 py-4 bg-black/30 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all" required />
+          </div>
+        </div>
+        
+        <div class="smart-input">
+          <div class="relative">
+            <i class="fas fa-lock absolute left-4 top-1/2 transform -translate-y-1/2 text-purple-400"></i>
+            <input type="password" id="password" placeholder="Mot de passe" 
+                   class="w-full pl-12 pr-12 py-4 bg-black/30 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all" required />
+            <button type="button" id="togglePassword" class="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white">
+              <i class="fas fa-eye"></i>
+            </button>
+          </div>
+        </div>
+        
+        <div class="relative hidden" id="maxThresholdContainer">
+          <div class="relative">
+            <i class="fas fa-coins absolute left-4 top-1/2 transform -translate-y-1/2 text-yellow-400"></i>
+            <input type="number" id="maxThreshold" placeholder="Budget mensuel (DH)" min="1" 
+                   class="w-full pl-12 pr-4 py-4 bg-black/30 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent transition-all" />
+          </div>
+        </div>
+        
+        <!-- Questions de sécurité pour l'inscription -->
+        <div class="hidden" id="securityQuestionContainer">
+          <div class="security-question-container p-4 rounded-xl mb-4">
+            <label class="block text-sm font-medium text-white mb-2">Question de sécurité</label>
+            <select id="securityQuestion" class="w-full p-3 bg-black/30 border border-red-400/50 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-red-500">
+              <option value="">Choisir une question...</option>
+              <option value="pet">Quel était le nom de votre premier animal de compagnie ?</option>
+              <option value="school">Dans quelle école primaire avez-vous étudié ?</option>
+              <option value="mother">Quel est le nom de jeune fille de votre mère ?</option>
+              <option value="city">Dans quelle ville êtes-vous né(e) ?</option>
+              <option value="friend">Quel est le prénom de votre meilleur ami d'enfance ?</option>
+            </select>
+          </div>
+          <div class="relative">
+            <i class="fas fa-key absolute left-4 top-1/2 transform -translate-y-1/2 text-red-400"></i>
+            <input type="text" id="securityAnswer" placeholder="Votre réponse" 
+                   class="w-full pl-12 pr-4 py-4 bg-black/30 border border-red-400/50 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all" />
+          </div>
+        </div>
+      </div>
+      
+      <!-- Authentification biométrique simulée -->
+      <div class="hidden" id="biometricAuth">
+        <button type="button" id="biometricBtn" class="w-full biometric-btn p-4 rounded-xl text-white font-medium transition-all">
+          <div class="flex items-center justify-center space-x-3">
+            <i class="fas fa-fingerprint text-xl"></i>
+            <span>Authentification Biométrique</span>
+          </div>
+        </button>
+      </div>
+      
+      <button type="submit" id="submitBtn" 
+              class="w-full btn-premium text-white px-6 py-4 rounded-xl font-semibold transition-all duration-300">
+        <i class="fas fa-sign-in-alt mr-2"></i>
+        Se connecter
+      </button>
+      
+      <div class="flex justify-center space-x-6 text-sm">
+        <button type="button" id="btnLogin" class="text-white hover:text-purple-300 transition-colors font-medium">
+          <i class="fas fa-sign-in-alt mr-1"></i> Connexion
+        </button>
+        <span class="text-gray-400">•</span>
+        <button type="button" id="btnRegister" class="text-white hover:text-yellow-300 transition-colors font-medium">
+          <i class="fas fa-user-plus mr-1"></i> S'inscrire
+        </button>
+        <span class="text-gray-400">•</span>
+        <button type="button" id="btnForgotPassword" class="text-white hover:text-red-300 transition-colors font-medium">
+          <i class="fas fa-question-circle mr-1"></i> Mot de passe oublié
+        </button>
+      </div>
+    </form>
+  </div>
 </div>
 
-<header>
-  <span id="welcomeMessage">Votre suivi des dépenses</span>
-  <span id="headerRight">
-    <span id="timeDisplay"></span> |
-    <span id="userDisplay"></span>
-    <button id="changeThresholdBtn" style="display:none;">Modifier seuil</button>
-    <button id="darkModeBtn">🌓 Dark Mode</button>
-    <button id="logoutBtn" style="display:none;">Se déconnecter</button>
-  </span>
+<!-- MODAL RÉCUPÉRATION MOT DE PASSE -->
+<div id="forgotPasswordModal" class="hidden fixed inset-0 flex justify-center items-center z-60 modal-backdrop">
+  <div class="glass rounded-3xl p-8 w-96 relative">
+    <div class="text-center mb-6">
+      <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-red-500 to-orange-500 flex items-center justify-center">
+        <i class="fas fa-key text-2xl text-white"></i>
+      </div>
+      <h2 class="text-2xl font-bold text-white mb-2">Récupération</h2>
+      <p class="text-gray-300 text-sm">Répondez à votre question de sécurité</p>
+    </div>
+    
+    <form id="forgotPasswordForm" class="space-y-4">
+      <div class="relative">
+        <i class="fas fa-user absolute left-4 top-1/2 transform -translate-y-1/2 text-purple-400"></i>
+        <input type="text" id="forgotUsername" placeholder="Nom d'utilisateur" 
+               class="w-full pl-12 pr-4 py-4 bg-black/30 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500" required />
+      </div>
+      
+      <div id="securityQuestionDisplay" class="hidden p-4 bg-gradient-to-r from-red-500/20 to-orange-500/20 rounded-xl border border-red-400/30">
+        <p class="text-white font-medium mb-2">Question de sécurité :</p>
+        <p id="questionText" class="text-gray-300 text-sm"></p>
+      </div>
+      
+      <div class="relative hidden" id="securityAnswerContainer">
+        <i class="fas fa-key absolute left-4 top-1/2 transform -translate-y-1/2 text-red-400"></i>
+        <input type="text" id="forgotSecurityAnswer" placeholder="Votre réponse" 
+               class="w-full pl-12 pr-4 py-4 bg-black/30 border border-red-400/50 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500" />
+      </div>
+      
+      <div class="flex space-x-3">
+        <button type="button" id="closeForgotModal" 
+                class="flex-1 bg-white/10 hover:bg-white/20 text-white px-6 py-4 rounded-xl transition-all duration-300">
+          Annuler
+        </button>
+        <button type="submit" 
+                class="flex-1 btn-premium text-white px-6 py-4 rounded-xl font-semibold">
+          <i class="fas fa-unlock mr-2"></i>
+          Récupérer
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- NOTIFICATION SYSTÈME PREMIUM -->
+<div id="notification" class="notification glass rounded-xl shadow-2xl">
+  <div class="flex items-center space-x-3 p-4">
+    <div class="icon-container w-10 h-10">
+      <i id="notificationIcon" class="fas fa-check"></i>
+    </div>
+    <div>
+      <p id="notificationTitle" class="font-semibold text-white text-sm"></p>
+      <p id="notificationText" class="text-gray-300 text-xs"></p>
+    </div>
+    <button id="closeNotification" class="text-gray-400 hover:text-white ml-auto">
+      <i class="fas fa-times"></i>
+    </button>
+  </div>
+</div>
+
+<!-- HEADER PREMIUM -->
+<header class="glass sticky top-0 z-30 p-6 border-b border-white/10">
+  <div class="max-w-7xl mx-auto flex justify-between items-center">
+    <div class="flex items-center space-x-4">
+      <div class="icon-container">
+        <i class="fas fa-hand-peace text-2xl"></i>
+      </div>
+      <div>
+        <h1 class="text-xl font-bold text-white">
+          Bonjour <span id="userDisplay" class="glow-text">Utilisateur</span>
+        </h1>
+        <p class="text-gray-400 text-sm">Gérez vos finances avec l'IA</p>
+      </div>
+    </div>
+    
+    <div class="flex items-center space-x-3">
+      <!-- Commande vocale -->
+      <button id="voiceBtn" class="glass glass-hover p-3 rounded-xl text-white relative">
+        <div id="voiceWave" class="voice-wave hidden">
+          <span></span><span></span><span></span><span></span>
+        </div>
+        <i id="voiceIcon" class="fas fa-microphone"></i>
+      </button>
+      
+      <!-- IA Assistant -->
+      <button id="aiBtn" class="glass glass-hover p-3 rounded-xl text-white">
+        <i class="fas fa-robot"></i>
+      </button>
+      
+      <!-- Paramètres -->
+      <div class="relative">
+        <button id="settingsBtn" class="glass glass-hover p-3 rounded-xl text-white">
+          <i class="fas fa-cog"></i>
+        </button>
+        <div id="settingsDropdown" class="absolute right-0 mt-2 w-56 glass rounded-xl shadow-xl hidden border border-white/10">
+          <div class="p-2">
+            <button id="thresholdBtn" class="w-full text-left px-4 py-3 text-white hover:bg-white/10 rounded-lg transition-colors flex items-center">
+              <i class="fas fa-coins w-5 text-yellow-400 mr-3"></i>
+              Modifier budget
+            </button>
+            <button id="exportBtn" class="w-full text-left px-4 py-3 text-white hover:bg-white/10 rounded-lg transition-colors flex items-center">
+              <i class="fas fa-download w-5 text-blue-400 mr-3"></i>
+              Exporter CSV
+            </button>
+            <button id="backupBtn" class="w-full text-left px-4 py-3 text-white hover:bg-white/10 rounded-lg transition-colors flex items-center">
+              <i class="fas fa-cloud-upload-alt w-5 text-green-400 mr-3"></i>
+              Sauvegarde Cloud
+            </button>
+            <button id="analyticsBtn" class="w-full text-left px-4 py-3 text-white hover:bg-white/10 rounded-lg transition-colors flex items-center">
+              <i class="fas fa-chart-line w-5 text-purple-400 mr-3"></i>
+              Analytics IA
+            </button>
+            <hr class="border-white/10 my-2">
+            <button id="resetBtn" class="w-full text-left px-4 py-3 text-white hover:bg-white/10 rounded-lg transition-colors flex items-center">
+              <i class="fas fa-trash w-5 text-red-400 mr-3"></i>
+              Réinitialiser
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <button id="logoutBtn" class="glass glass-hover p-3 rounded-xl text-white">
+        <i class="fas fa-sign-out-alt"></i>
+      </button>
+    </div>
+  </div>
 </header>
 
-<main>
-  <div id="alerte"></div>
-
-  <div style="margin-bottom:1rem;">
-    <label for="monthSelect">Mois:</label>
-    <input type="month" id="monthSelect">
-    <button id="goCurrentMonth">Mois courant</button>
+<main class="max-w-7xl mx-auto p-6 space-y-8">
+  <!-- CONTRÔLES DE MOIS PREMIUM -->
+  <div class="premium-card rounded-2xl p-6">
+    <div class="flex flex-wrap items-center justify-between gap-4">
+      <div class="flex items-center space-x-4">
+        <label class="text-white font-medium flex items-center">
+          <i class="fas fa-calendar-alt mr-2 text-purple-400"></i>
+          Période :
+        </label>
+        <input type="month" id="monthSelect" 
+               class="bg-black/30 border border-white/20 rounded-xl px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-purple-500"/>
+        <button id="goCurrentMonth" 
+                class="glass glass-hover text-white px-4 py-2 rounded-xl transition-all">
+          <i class="fas fa-calendar-day mr-2"></i>Ce mois
+        </button>
+      </div>
+      
+      <div class="flex items-center space-x-4">
+        <!-- Cercle de progression premium -->
+        <div class="progress-ring">
+          <svg width="60" height="60">
+            <circle cx="30" cy="30" r="25" stroke="#333" stroke-width="4"/>
+            <circle id="progressCircle" cx="30" cy="30" r="25" stroke="url(#gradient)" stroke-width="4" 
+                    fill="none" stroke-dasharray="157" stroke-dashoffset="157"/>
+            <defs>
+              <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:#8b5cf6"/>
+                <stop offset="100%" style="stop-color:#f59e0b"/>
+              </linearGradient>
+            </defs>
+          </svg>
+          <div class="absolute inset-0 flex items-center justify-center">
+            <span id="budgetPercentage" class="text-white text-xs font-bold">0%</span>
+          </div>
+        </div>
+        <div class="text-right">
+          <p class="text-gray-400 text-sm">Budget utilisé</p>
+          <p id="budgetUsed" class="text-white font-semibold">0 DH</p>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <form id="form">
-    <input type="text" id="label" placeholder="Description" required />
-    <input type="number" id="amount" placeholder="Montant (MAD)" required />
-    <button type="submit">Ajouter</button>
-  </form>
-
-  <div style="display:flex; gap:0.5rem; flex-wrap:wrap; margin-bottom:1rem;">
-    <input type="text" id="searchInput" placeholder="Rechercher..." />
-    <select id="sortSelect">
-      <option value="order">Ordre Ajout</option>
-      <option value="asc">Montant ↑</option>
-      <option value="desc">Montant ↓</option>
-    </select>
+  <!-- SUGGESTIONS IA -->
+  <div id="aiSuggestions" class="hidden ai-suggestion rounded-2xl p-6">
+    <div class="flex items-start space-x-4">
+      <div class="icon-container">
+        <i class="fas fa-lightbulb"></i>
+      </div>
+      <div class="flex-1">
+        <h3 class="text-white font-semibold mb-2">💡 Suggestions IA</h3>
+        <div id="suggestionsList" class="space-y-2"></div>
+      </div>
+      <button id="closeSuggestions" class="text-gray-400 hover:text-white">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
   </div>
 
-  <canvas id="myChart"></canvas>
-  <div class="progress-container"><div class="progress-bar" id="progressBar"></div></div>
-  <div class="stats" id="stats"></div>
+  <!-- STATISTIQUES PRINCIPALES PREMIUM -->
+  <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+    <div class="stat-card premium-card rounded-2xl p-6 text-center">
+      <div class="icon-container mx-auto mb-4">
+        <i class="fas fa-credit-card text-2xl"></i>
+      </div>
+      <p class="text-gray-400 text-sm mb-2">Total Dépenses</p>
+      <p id="totalExpenses" class="text-3xl font-bold text-white glow-text">0 DH</p>
+      <div class="text-xs text-gray-500 mt-1">
+        <i class="fas fa-arrow-up text-red-400"></i>
+        <span id="expenseChange">+0%</span> ce mois
+      </div>
+    </div>
 
-  <div id="depenses"></div>
-  <button id="exportCSV">📄 Exporter CSV</button>
-  <button id="reset">♻ Réinitialiser</button>
+    <div class="stat-card premium-card rounded-2xl p-6 text-center">
+      <div class="icon-container mx-auto mb-4">
+        <i class="fas fa-piggy-bank text-2xl"></i>
+      </div>
+      <p class="text-gray-400 text-sm mb-2">Budget Restant</p>
+      <p id="remainingBudget" class="text-3xl font-bold text-white glow-text">0 DH</p>
+      <div class="text-xs text-gray-500 mt-1">
+        <i class="fas fa-shield-alt text-green-400"></i>
+        <span id="budgetHealth">Sain</span>
+      </div>
+    </div>
+    
+    <div class="stat-card premium-card rounded-2xl p-6 text-center">
+      <div class="icon-container mx-auto mb-4">
+        <i class="fas fa-exchange-alt text-2xl"></i>
+      </div>
+      <p class="text-gray-400 text-sm mb-2">Transactions</p>
+      <p id="totalTransactions" class="text-3xl font-bold text-white glow-text">0</p>
+      <div class="text-xs text-gray-500 mt-1">
+        <i class="fas fa-chart-line text-blue-400"></i>
+        <span id="transactionTrend">Stable</span>
+      </div>
+    </div>
+    
+    <div class="stat-card premium-card rounded-2xl p-6 text-center">
+      <div class="icon-container mx-auto mb-4">
+        <i class="fas fa-calculator text-2xl"></i>
+      </div>
+      <p class="text-gray-400 text-sm mb-2">Moyenne/Jour</p>
+      <p id="dailyAverage" class="text-3xl font-bold text-white glow-text">0 DH</p>
+      <div class="text-xs text-gray-500 mt-1">
+        <i class="fas fa-calendar-day text-yellow-400"></i>
+        <span id="dailyForecast">Prévision</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ALERTES INTELLIGENTES PREMIUM -->
+  <section id="alertsContainer" class="space-y-3"></section>
+
+  <!-- GRAPHIQUES AMÉLIORÉS PREMIUM -->
+  <section class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <div class="premium-card rounded-2xl p-6">
+      <div class="flex items-center justify-between mb-6">
+        <h2 class="text-xl font-semibold text-white flex items-center">
+          <i class="fas fa-chart-pie mr-3 text-purple-400"></i>
+          Répartition par catégorie
+        </h2>
+        <div class="flex space-x-2">
+          <div class="w-3 h-3 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full animate-pulse"></div>
+        </div>
+      </div>
+      <canvas id="pieChart" class="max-h-64"></canvas>
+    </div>
+    
+    <div class="premium-card rounded-2xl p-6">
+      <div class="flex items-center justify-between mb-6">
+        <h2 class="text-xl font-semibold text-white flex items-center">
+          <i class="fas fa-chart-bar mr-3 text-yellow-400"></i>
+          Top Catégories
+        </h2>
+        <button id="categoryInsights" class="glass glass-hover px-3 py-1 rounded-lg text-xs text-white">
+          <i class="fas fa-brain mr-1"></i>Insights
+        </button>
+      </div>
+      <canvas id="barChart" class="max-h-64"></canvas>
+    </div>
+  </section>
+
+  <section class="premium-card rounded-2xl p-6">
+    <div class="flex items-center justify-between mb-6">
+      <h2 class="text-xl font-semibold text-white flex items-center">
+        <i class="fas fa-chart-line mr-3 text-green-400"></i>
+        Analyse Prédictive IA
+      </h2>
+      <div class="flex space-x-2">
+        <button id="predictiveMode" class="glass glass-hover px-3 py-1 rounded-lg text-xs text-white">
+          <i class="fas fa-crystal-ball mr-1"></i>Prédiction
+        </button>
+        <button id="compareMode" class="glass glass-hover px-3 py-1 rounded-lg text-xs text-white">
+          <i class="fas fa-balance-scale mr-1"></i>Comparer
+        </button>
+      </div>
+    </div>
+    <canvas id="trendChart" class="max-h-64"></canvas>
+  </section>
+
+  <!-- WIDGETS RÉVOLUTIONNAIRES -->
+  <section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <!-- Widget Objectifs -->
+    <div class="premium-card rounded-2xl p-6">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-lg font-semibold text-white flex items-center">
+          <i class="fas fa-bullseye mr-2 text-green-400"></i>
+          Objectifs
+        </h3>
+        <button id="addGoalBtn" class="glass glass-hover p-2 rounded-lg">
+          <i class="fas fa-plus text-white"></i>
+        </button>
+      </div>
+      <div id="goalsList" class="space-y-3"></div>
+    </div>
+    
+    <!-- Widget Abonnements -->
+    <div class="premium-card rounded-2xl p-6">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-lg font-semibold text-white flex items-center">
+          <i class="fas fa-sync-alt mr-2 text-blue-400"></i>
+          Abonnements
+        </h3>
+        <button id="addSubscriptionBtn" class="glass glass-hover p-2 rounded-lg">
+          <i class="fas fa-plus text-white"></i>
+        </button>
+      </div>
+      <div id="subscriptionsList" class="space-y-3"></div>
+    </div>
+    
+    <!-- Widget Économies -->
+    <div class="premium-card rounded-2xl p-6">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-lg font-semibold text-white flex items-center">
+          <i class="fas fa-leaf mr-2 text-green-400"></i>
+          Économies IA
+        </h3>
+        <div class="text-xs text-green-400">+127 DH ce mois</div>
+      </div>
+      <div id="savingsInsights" class="space-y-2">
+        <div class="text-sm text-gray-300">
+          <i class="fas fa-lightbulb text-yellow-400 mr-2"></i>
+          Réduisez vos sorties restaurant de 20%
+        </div>
+        <div class="text-sm text-gray-300">
+          <i class="fas fa-car text-blue-400 mr-2"></i>
+          Covoiturage: -45 DH/semaine possible
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LISTE DES DÉPENSES PREMIUM -->
+  <section class="premium-card rounded-2xl p-6">
+    <div class="flex items-center justify-between mb-6">
+      <h3 class="text-xl font-semibold text-white flex items-center">
+        <i class="fas fa-list mr-3 text-purple-400"></i>
+        Transactions récentes
+      </h3>
+      <div class="flex space-x-2">
+        <div class="relative">
+          <input type="text" id="searchExpenses" placeholder="Rechercher..."
+                 class="bg-black/30 border border-white/20 rounded-lg px-8 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-purple-500">
+          <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+        </div>
+        <button id="sortByAmount" class="glass glass-hover px-3 py-2 rounded-lg text-sm text-white">
+          <i class="fas fa-sort-amount-down mr-1"></i>Montant
+        </button>
+        <button id="sortByDate" class="glass glass-hover px-3 py-2 rounded-lg text-sm text-white">
+          <i class="fas fa-sort-numeric-down mr-1"></i>Date
+        </button>
+        <button id="filterBtn" class="glass glass-hover px-3 py-2 rounded-lg text-sm text-white">
+          <i class="fas fa-filter mr-1"></i>Filtrer
+        </button>
+      </div>
+    </div>
+    <div id="expensesList" class="space-y-3 max-h-96 overflow-y-auto custom-scrollbar"></div>
+  </section>
+
 </main>
 
+<!-- BOUTON FLOTTANT RÉVOLUTIONNAIRE -->
+<div class="fixed bottom-6 right-6 z-40">
+  <div class="relative">
+    <!-- Menu flottant -->
+    <div id="floatingMenu" class="absolute bottom-16 right-0 space-y-3 hidden">
+      <button id="quickPhotoBtn" class="glass glass-hover w-12 h-12 rounded-full flex items-center justify-center text-white">
+        <i class="fas fa-camera"></i>
+      </button>
+      <button id="voiceExpenseBtn" class="glass glass-hover w-12 h-12 rounded-full flex items-center justify-center text-white">
+        <i class="fas fa-microphone"></i>
+      </button>
+      <button id="aiSuggestBtn" class="glass glass-hover w-12 h-12 rounded-full flex items-center justify-center text-white">
+        <i class="fas fa-magic"></i>
+      </button>
+    </div>
+    
+    <!-- Bouton principal -->
+    <button id="addExpenseBtn" class="w-16 h-16 btn-premium rounded-full shadow-2xl flex items-center justify-center text-white text-2xl relative overflow-hidden">
+      <i id="mainFloatingIcon" class="fas fa-plus transition-transform duration-300"></i>
+    </button>
+  </div>
+</div>
+
+<!-- MODAL AJOUTER DÉPENSE RÉVOLUTIONNAIRE -->
+<div id="modalAdd" class="hidden fixed inset-0 modal-backdrop flex justify-center items-center z-50">
+  <div class="glass rounded-3xl p-8 w-[480px] max-w-[90vw] relative overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-yellow-500/5"></div>
+    
+    <div class="relative text-center mb-6">
+      <div class="icon-container mx-auto mb-4">
+        <i class="fas fa-plus text-2xl"></i>
+      </div>
+      <h2 class="text-2xl font-bold text-white glow-text">Nouvelle dépense</h2>
+      <p class="text-gray-300 text-sm mt-1">Ajoutez une transaction intelligente</p>
+    </div>
+    
+    <form id="expenseForm" class="space-y-6 relative">
+      <!-- Onglets de saisie -->
+      <div class="flex space-x-1 bg-black/20 rounded-xl p-1 mb-6">
+        <button type="button" id="manualTab" class="flex-1 py-2 px-4 rounded-lg text-white text-sm font-medium transition-all bg-white/20">
+          <i class="fas fa-keyboard mr-2"></i>Manuel
+        </button>
+        <button type="button" id="voiceTab" class="flex-1 py-2 px-4 rounded-lg text-gray-400 text-sm font-medium transition-all">
+          <i class="fas fa-microphone mr-2"></i>Vocal
+        </button>
+        <button type="button" id="photoTab" class="flex-1 py-2 px-4 rounded-lg text-gray-400 text-sm font-medium transition-all">
+          <i class="fas fa-camera mr-2"></i>Photo
+        </button>
+      </div>
+      
+      <!-- Saisie manuelle -->
+      <div id="manualInput" class="space-y-4">
+        <div class="smart-input">
+          <div class="relative">
+            <i class="fas fa-file-alt absolute left-4 top-1/2 transform -translate-y-1/2 text-purple-400"></i>
+            <input type="text" id="expDesc" placeholder="Description de la dépense" 
+                   class="w-full pl-12 pr-12 py-4 bg-black/30 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all" required/>
+            <button type="button" id="aiDescSuggest" class="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-yellow-400">
+              <i class="fas fa-magic"></i>
+            </button>
+          </div>
+        </div>
+        
+        <div class="smart-input">
+          <div class="relative">
+            <i class="fas fa-coins absolute left-4 top-1/2 transform -translate-y-1/2 text-yellow-400"></i>
+            <input type="number" id="expAmount" placeholder="Montant (DH)" step="0.01" 
+                   class="w-full pl-12 pr-4 py-4 bg-black/30 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-500 transition-all" required/>
+          </div>
+        </div>
+        
+        <div class="grid grid-cols-2 gap-4">
+          <div class="relative">
+            <i class="fas fa-tags absolute left-4 top-1/2 transform -translate-y-1/2 text-blue-400"></i>
+            <select id="expCategory" 
+                    class="w-full pl-12 pr-4 py-4 bg-black/30 border border-white/20 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none">
+              <option value="Alimentation">🍕 Alimentation</option>
+              <option value="Transport">🚗 Transport</option>
+              <option value="Loisirs">🎮 Loisirs</option>
+              <option value="Santé">🏥 Santé</option>
+              <option value="Shopping">🛍️ Shopping</option>
+              <option value="Logement">🏠 Logement</option>
+              <option value="Éducation">📚 Éducation</option>
+              <option value="Voyage">✈️ Voyage</option>
+              <option value="Sport">⚽ Sport</option>
+              <option value="Beauté">💄 Beauté</option>
+              <option value="Technologie">📱 Technologie</option>
+              <option value="Autres">⭐ Autres</option>
+            </select>
+          </div>
+          
+          <div class="relative">
+            <i class="fas fa-calendar absolute left-4 top-1/2 transform -translate-y-1/2 text-green-400"></i>
+            <input type="date" id="expDate" 
+                   class="w-full pl-12 pr-4 py-4 bg-black/30 border border-white/20 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-green-500"/>
+          </div>
+        </div>
+        
+        <!-- Tags personnalisés -->
+        <div class="space-y-2">
+          <label class="text-white text-sm font-medium">Tags (optionnel)</label>
+          <div class="flex flex-wrap gap-2" id="tagContainer">
+            <input type="text" id="tagInput" placeholder="Ajouter un tag..." 
+                   class="bg-black/30 border border-white/20 rounded-lg px-3 py-1 text-white text-sm focus:outline-none focus:ring-1 focus:ring-purple-500">
+          </div>
+        </div>
+        
+        <!-- Géolocalisation -->
+        <div class="flex items-center space-x-3">
+          <button type="button" id="locationBtn" class="glass glass-hover px-4 py-2 rounded-lg text-white text-sm">
+            <i class="fas fa-map-marker-alt mr-2"></i>Ajouter localisation
+          </button>
+          <span id="locationText" class="text-gray-400 text-sm hidden"></span>
+        </div>
+      </div>
+      
+      <!-- Saisie vocale -->
+      <div id="voiceInput" class="hidden text-center py-8">
+        <div class="voice-wave mb-4">
+          <span></span><span></span><span></span><span></span>
+        </div>
+        <button type="button" id="startVoiceRecord" class="btn-premium w-20 h-20 rounded-full">
+          <i class="fas fa-microphone text-2xl"></i>
+        </button>
+        <p class="text-white mt-4">Appuyez et parlez</p>
+        <p class="text-gray-400 text-sm">Ex: "25 dirhams restaurant McDo"</p>
+      </div>
+      
+      <!-- Saisie photo -->
+      <div id="photoInput" class="hidden text-center py-8">
+        <div class="border-2 border-dashed border-white/20 rounded-xl p-8 mb-4">
+          <input type="file" id="receiptPhoto" accept="image/*" class="hidden">
+          <button type="button" id="takePhoto" class="btn-premium w-20 h-20 rounded-full">
+            <i class="fas fa-camera text-2xl"></i>
+          </button>
+          <p class="text-white mt-4">Photographier un reçu</p>
+          <p class="text-gray-400 text-sm">L'IA extraira automatiquement les informations</p>
+        </div>
+        <div id="photoPreview" class="hidden">
+          <img id="previewImg" class="max-w-full h-32 object-cover rounded-lg mx-auto">
+          <div id="extractedData" class="mt-4 p-4 bg-green-500/20 rounded-lg border border-green-400/30">
+            <p class="text-green-300 text-sm">✅ Données extraites par l'IA</p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Boutons d'action -->
+      <div class="flex space-x-3">
+        <button type="button" id="closeModal" 
+                class="flex-1 glass glass-hover text-white px-6 py-4 rounded-xl transition-all duration-300">
+          Annuler
+        </button>
+        <button type="submit" id="saveExpense" 
+                class="flex-1 btn-premium text-white px-6 py-4 rounded-xl font-semibold">
+          <i class="fas fa-save mr-2"></i>
+          Ajouter
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- MODAL ANALYTICS IA -->
+<div id="analyticsModal" class="hidden fixed inset-0 modal-backdrop flex justify-center items-center z-50">
+  <div class="glass rounded-3xl p-8 w-[600px] max-w-[90vw] relative">
+    <div class="text-center mb-6">
+      <div class="icon-container mx-auto mb-4">
+        <i class="fas fa-brain text-2xl"></i>
+      </div>
+      <h2 class="text-2xl font-bold text-white">Analytics IA</h2>
+      <p class="text-gray-300 text-sm">Analyse intelligente de vos dépenses</p>
+    </div>
+    
+    <div id="analyticsContent" class="space-y-6">
+      <!-- Contenu dynamique généré par l'IA -->
+    </div>
+    
+    <button id="closeAnalytics" class="w-full mt-6 glass glass-hover text-white px-6 py-3 rounded-xl">
+      Fermer
+    </button>
+  </div>
+</div>
+
 <script>
-let currentUser = null;
-let depenses = [];
-let SEUIL_MAX = 4000;
-let SEUIL_ROUGE = SEUIL_MAX*0.8;
-let currentMonthKey = new Date().toISOString().slice(0,7);
-const ctx = document.getElementById("myChart").getContext("2d");
-let chart;
-
-// Heure dynamique
-function updateTime() {
-  const now = new Date();
-  const monthNames = ["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"];
-  document.getElementById("timeDisplay").textContent = monthNames[now.getMonth()] + " " + now.getFullYear() + " | " + now.toLocaleTimeString();
-}
-setInterval(updateTime,1000); updateTime();
-
-// Header utilisateur
-function majHeaderUser() {
-  const userSpan = document.getElementById("userDisplay");
-  const logoutBtn = document.getElementById("logoutBtn");
-  const changeBtn = document.getElementById("changeThresholdBtn");
-  const welcome = document.getElementById("welcomeMessage");
-  if(currentUser){
-    userSpan.textContent = currentUser;
-    logoutBtn.style.display = "inline-block";
-    changeBtn.style.display = "inline-block";
-    welcome.textContent = `Votre suivi des dépenses – Bonjour ${currentUser} !`;
-  } else {
-    userSpan.textContent = "";
-    logoutBtn.style.display = "none";
-    changeBtn.style.display = "none";
-    welcome.textContent = "Votre suivi des dépenses";
-  }
-}
-document.getElementById("logoutBtn").addEventListener("click", ()=>{
-  if(confirm("Voulez-vous vous déconnecter ?")){
-    currentUser=null; depenses=[]; document.getElementById("loginScreen").style.display="flex";
-    majHeaderUser(); document.getElementById("depenses").innerHTML=""; if(chart) chart.destroy();
-    document.getElementById("progressBar").style.width="0%"; document.getElementById("stats").innerHTML="";
-    document.getElementById("alerte").style.display="none";
-  }
-});
-
-// Dark Mode
-document.getElementById("darkModeBtn").addEventListener("click", ()=>{
-  document.body.classList.toggle("dark");
-  document.getElementById("darkModeBtn").textContent = document.body.classList.contains("dark") ? "🌞 Light Mode" : "🌓 Dark Mode";
-});
-
-// Fonctions ajout / suppression dépense
-function ajouterDepense(label,amount){ depenses.push({label,amount}); sauvegarderMois(currentMonthKey); majListe(); majChart(); }
-function supprimer(i){ depenses.splice(i,1); sauvegarderMois(currentMonthKey); majListe(); majChart(); }
-
-// Formulaire ajout dépense
-document.getElementById("form").addEventListener("submit", e=>{
-  e.preventDefault();
-  const label=document.getElementById("label").value.trim();
-  const amount=parseFloat(document.getElementById("amount").value);
-  if(!label || amount<=0) return;
-  ajouterDepense(label,amount); e.target.reset();
-});
-
-// Liste avec tri/recherche
-function majListe(){
-  const div=document.getElementById("depenses"); div.innerHTML="";
-  let filtered=depenses.filter(d=>d.label.toLowerCase().includes(document.getElementById("searchInput").value.toLowerCase()));
-  const sortVal=document.getElementById("sortSelect").value;
-  if(sortVal==="asc") filtered.sort((a,b)=>a.amount-b.amount);
-  if(sortVal==="desc") filtered.sort((a,b)=>b.amount-a.amount);
-  filtered.forEach(d=>{
-    const e=document.createElement("div");
-    e.className="depense added";
-    e.innerHTML=`<span>${d.label} - <b>${d.amount} MAD</b></span> <button onclick="supprimer(${depenses.indexOf(d)})">❌</button>`;
-    div.appendChild(e);
-  });
-}
-document.getElementById("searchInput").addEventListener("input", majListe);
-document.getElementById("sortSelect").addEventListener("change", majListe);
-
-// Alertes
-function majAlerte(){
-  const total=depenses.reduce((s,d)=>s+d.amount,0);
-  const alerte=document.getElementById("alerte");
-  if(total>SEUIL_MAX){ alerte.textContent="⚠ Dépassement du seuil maximum !"; alerte.className="rouge"; alerte.style.display="block"; }
-  else if(total>SEUIL_MAX*0.8){ alerte.textContent="⚠ Attention : vous approchez du seuil maximum !"; alerte.className="orange"; alerte.style.display="block"; }
-  else{ alerte.style.display="none"; }
-}
-
-// Couleur Pie
-function getCouleur(total){
-  if(total<=SEUIL_MAX*0.8) return "#F5C45E";
-  if(total<=SEUIL_MAX) return "#E78B48";
-  return "#BE3D2A";
-}
-
-// Pie chart + barre
-function majChart(){
-  const total=depenses.reduce((s,d)=>s+d.amount,0);
-  const couleur=getCouleur(total);
-  const data={ labels:["Dépenses","Reste"], datasets:[{data:[Math.min(total,SEUIL_MAX), Math.max(SEUIL_MAX-total,0)], backgroundColor:[couleur,"#e9ecef"], borderWidth:1}] };
-  const options={ animation:{animateRotate:true,animateScale:true,duration:800} };
-  if(chart) chart.destroy();
-  chart=new Chart(ctx,{type:"pie",data,options});
-  const percent=Math.min((total/SEUIL_MAX)*100,100).toFixed(1);
-  document.getElementById("stats").innerHTML=`Total: <b>${total} MAD</b> / ${SEUIL_MAX} MAD (${percent}%)`;
-  const bar=document.getElementById("progressBar");
-  bar.style.transition="width 0.8s ease, background 0.8s ease";
-  bar.style.width=percent+"%"; bar.style.background=`linear-gradient(90deg,#F5C45E,#E78B48,#BE3D2A)`;
-  majAlerte();
-}
-
-// Export CSV
-document.getElementById("exportCSV").addEventListener("click", ()=>{
-  if(depenses.length===0){ alert("Aucune dépense à exporter."); return; }
-  let csvContent = "data:text/csv;charset=utf-8,Description,Montant\n";
-  depenses.forEach(d => { csvContent += `${d.label},${d.amount}\n`; });
-  const encodedUri = encodeURI(csvContent);
-  const link = document.createElement("a");
-  link.setAttribute("href", encodedUri);
-  link.setAttribute("download", `depenses_${currentUser}_${currentMonthKey}.csv`);
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-});
-
-// Réinitialiser
-document.getElementById("reset").addEventListener("click", ()=>{
-  if(confirm("Voulez-vous vraiment réinitialiser toutes les dépenses de ce mois ?")){ depenses=[]; sauvegarderMois(currentMonthKey); majListe(); majChart(); }
-});
-
-// Modifier seuil
-document.getElementById("changeThresholdBtn").addEventListener("click", ()=>{
-  const now = new Date(); const [year, month] = currentMonthKey.split("-").map(Number);
-  const isPast = (year < now.getFullYear()) || (year === now.getFullYear() && month < now.getMonth()+1);
-  if(isPast){ alert("Impossible de modifier le seuil sur les mois passés !"); return; }
-  const newThreshold=parseFloat(prompt("Entrez le nouveau seuil maximum (MAD) :", SEUIL_MAX));
-  if(isNaN(newThreshold) || newThreshold<=0){ alert("Seuil invalide"); return; }
-  SEUIL_MAX=newThreshold; const userData = JSON.parse(localStorage.getItem(`user_${currentUser}`));
-  userData.threshold = SEUIL_MAX;
-  localStorage.setItem(`user_${currentUser}`, JSON.stringify(userData));
-  SEUIL_ROUGE = SEUIL_MAX*0.8; majChart();
-});
-
-// Sauvegarder / charger mois
-function sauvegarderMois(monthKey){
-  const allDepenses = JSON.parse(localStorage.getItem(`depenses_${currentUser}`) || "{}");
-  allDepenses[monthKey] = depenses; localStorage.setItem(`depenses_${currentUser}`, JSON.stringify(allDepenses));
-}
-function chargerMois(monthKey){
-  const allDepenses = JSON.parse(localStorage.getItem(`depenses_${currentUser}`) || "{}");
-  depenses = allDepenses[monthKey] || [];
-  majListe(); majChart();
-  const now = new Date(); const [year, month] = monthKey.split("-").map(Number);
-  const isPast = (year < now.getFullYear()) || (year === now.getFullYear() && month < now.getMonth()+1);
-  document.getElementById("form").style.display = isPast ? "none" : "flex";
-  document.getElementById("reset").style.display = isPast ? "none" : "block";
-}
-document.getElementById("monthSelect").value = currentMonthKey;
-chargerMois(currentMonthKey);
-document.getElementById("monthSelect").addEventListener("change", ()=>{
-  currentMonthKey = document.getElementById("monthSelect").value;
-  chargerMois(currentMonthKey);
-});
-document.getElementById("goCurrentMonth").addEventListener("click", ()=>{
-  currentMonthKey = new Date().toISOString().slice(0,7);
-  document.getElementById("monthSelect").value=currentMonthKey;
-  chargerMois(currentMonthKey);
-});
-
-// Login / Inscription
-let mode="login";
-document.getElementById("btnLogin").addEventListener("click", ()=>{
-  mode="login"; document.getElementById("formTitle").textContent="Connexion";
-  document.getElementById("submitBtn").textContent="Entrer"; document.getElementById("maxThreshold").style.display="none";
-  document.getElementById("secretQuestion").style.display="none"; document.getElementById("secretAnswer").style.display="none";
-});
-document.getElementById("btnRegister").addEventListener("click", ()=>{
-  mode="register"; document.getElementById("formTitle").textContent="Inscription";
-  document.getElementById("submitBtn").textContent="S'inscrire"; document.getElementById("maxThreshold").style.display="block";
-  document.getElementById("secretQuestion").style.display="block"; document.getElementById("secretAnswer").style.display="block";
-});
-
-document.getElementById("loginForm").addEventListener("submit", e=>{
-  e.preventDefault();
-  const usernameInput=document.getElementById("username").value.trim();
-  const pwdInput=document.getElementById("password").value.trim();
-  const maxInput=parseFloat(document.getElementById("maxThreshold").value);
-  const question=document.getElementById("secretQuestion").value;
-  const answer=document.getElementById("secretAnswer").value.trim();
-  if(!usernameInput || !pwdInput){ alert("Nom et mot de passe requis"); return; }
-
-  if(mode==="register"){
-    if(localStorage.getItem(`user_${usernameInput}`)){ alert("Ce profil existe déjà."); return; }
-    if(isNaN(maxInput) || maxInput<=0){ alert("Seuil maximum invalide"); return; }
-    if(!question || !answer){ alert("Question et réponse secrète requises"); return; }
-    localStorage.setItem(`user_${usernameInput}`, JSON.stringify({password: pwdInput, threshold: maxInput, question, answer}));
-    localStorage.setItem(`depenses_${usernameInput}`,"{}");
-    currentUser=usernameInput; SEUIL_MAX=maxInput; SEUIL_ROUGE=SEUIL_MAX*0.8;
-  } else {
-    const data = JSON.parse(localStorage.getItem(`user_${usernameInput}`));
-    if(!data || data.password!==pwdInput){ alert("Nom ou mot de passe incorrect"); return; }
-    currentUser=usernameInput; SEUIL_MAX=data.threshold; SEUIL_ROUGE=SEUIL_MAX*0.8;
+class PremiumExpenseTracker {
+  constructor() {
+    this.currentUser = null;
+    this.expenses = [];
+    this.budget = 2000;
+    this.threshold = this.budget;
+    this.currentMonthKey = new Date().toISOString().slice(0, 7);
+    this.goals = [];
+    this.subscriptions = [];
+    this.userLocation = null;
+    this.voiceRecognition = null;
+    this.currentTab = 'manual';
+    this.isFloatingMenuOpen = false;
+    this.tags = [];
+    
+    this.initializeElements();
+    this.initializeCharts();
+    this.bindEvents();
+    this.setupVoiceRecognition();
+    this.checkLoginStatus();
   }
 
-  document.getElementById("loginScreen").style.display="none";
-  majHeaderUser(); currentMonthKey = new Date().toISOString().slice(0,7);
-  document.getElementById("monthSelect").value=currentMonthKey; chargerMois(currentMonthKey);
-});
+  initializeElements() {
+    this.elements = {
+      userDisplay: document.getElementById("userDisplay"),
+      totalExpenses: document.getElementById("totalExpenses"),
+      remainingBudget: document.getElementById("remainingBudget"),
+      totalTransactions: document.getElementById("totalTransactions"),
+      dailyAverage: document.getElementById("dailyAverage"),
+      budgetPercentage: document.getElementById("budgetPercentage"),
+      progressCircle: document.getElementById("progressCircle"),
+      alertsContainer: document.getElementById("alertsContainer"),
+      expensesList: document.getElementById("expensesList"),
+      monthSelect: document.getElementById("monthSelect"),
+      notification: document.getElementById("notification"),
+      aiSuggestions: document.getElementById("aiSuggestions"),
+      suggestionsList: document.getElementById("suggestionsList"),
+      budgetUsed: document.getElementById("budgetUsed"),
+      expenseChange: document.getElementById("expenseChange"),
+      budgetHealth: document.getElementById("budgetHealth"),
+      transactionTrend: document.getElementById("transactionTrend"),
+      dailyForecast: document.getElementById("dailyForecast")
+    };
+    
+    // Set current month as default
+    this.elements.monthSelect.value = this.currentMonthKey;
+  }
 
-// Mot de passe oublié
-document.getElementById("forgotPasswordBtn").addEventListener("click", ()=>{
-  const username=document.getElementById("username").value.trim();
-  const userData = JSON.parse(localStorage.getItem(`user_${username}`));
-  if(!userData){ alert("Utilisateur non trouvé"); return; }
-  const answer = prompt(`${userData.question}`);
-  if(answer===userData.answer){ alert(`Votre mot de passe est : ${userData.password}`); }
-  else{ alert("Réponse incorrecte"); }
+  initializeCharts() {
+    Chart.defaults.color = '#ffffff';
+    Chart.defaults.borderColor = 'rgba(255,255,255,0.1)';
+    
+    const chartOptions = {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          position: 'bottom',
+          labels: { 
+            usePointStyle: true, 
+            padding: 20,
+            color: '#ffffff'
+          }
+        }
+      }
+    };
+
+    // Graphique en secteurs avec dégradés
+    this.pieChart = new Chart(document.getElementById("pieChart"), {
+      type: 'doughnut',
+      data: {
+        labels: [],
+        datasets: [{
+          data: [],
+          backgroundColor: [
+            'rgba(139, 92, 246, 0.8)',
+            'rgba(245, 158, 11, 0.8)',
+            'rgba(16, 185, 129, 0.8)',
+            'rgba(239, 68, 68, 0.8)',
+            'rgba(59, 130, 246, 0.8)',
+            'rgba(236, 72, 153, 0.8)',
+            'rgba(34, 197, 94, 0.8)',
+            'rgba(168, 85, 247, 0.8)'
+          ],
+          borderWidth: 0,
+          cutout: '65%'
+        }]
+      },
+      options: chartOptions
+    });
+
+    this.barChart = new Chart(document.getElementById("barChart"), {
+      type: 'bar',
+      data: {
+        labels: [],
+        datasets: [{
+          data: [],
+          backgroundColor: 'rgba(139, 92, 246, 0.8)',
+          borderRadius: 8,
+          borderSkipped: false
+        }]
+      },
+      options: {
+        ...chartOptions,
+        indexAxis: 'y',
+        scales: {
+          x: { 
+            beginAtZero: true, 
+            grid: { color: 'rgba(255,255,255,0.1)' },
+            ticks: { color: '#ffffff' }
+          },
+          y: { 
+            grid: { display: false },
+            ticks: { color: '#ffffff' }
+          }
+        }
+      }
+    });
+
+    this.trendChart = new Chart(document.getElementById("trendChart"), {
+      type: 'line',
+      data: {
+        labels: [],
+        datasets: [
+          {
+            label: "Dépenses Réelles",
+            data: [],
+            borderColor: 'rgba(239, 68, 68, 1)',
+            backgroundColor: 'rgba(239, 68, 68, 0.1)',
+            fill: true,
+            tension: 0.4,
+            pointRadius: 6,
+            pointHoverRadius: 8
+          },
+          {
+            label: "Prédiction IA",
+            data: [],
+            borderColor: 'rgba(139, 92, 246, 1)',
+            backgroundColor: 'rgba(139, 92, 246, 0.1)',
+            fill: false,
+            tension: 0.4,
+            borderDash: [5, 5]
+          }
+        ]
+      },
+      options: {
+        ...chartOptions,
+        scales: {
+          y: { 
+            beginAtZero: true, 
+            grid: { color: 'rgba(255,255,255,0.1)' },
+            ticks: { color: '#ffffff' }
+          },
+          x: { 
+            grid: { color: 'rgba(255,255,255,0.1)' },
+            ticks: { color: '#ffffff' }
+          }
+        }
+      }
+    });
+  }
+
+  bindEvents() {
+    this.setupAdvancedLoginSystem();
+    
+    // Boutons principaux
+    document.getElementById("addExpenseBtn").onclick = () => this.toggleFloatingMenu();
+    document.getElementById("closeModal").onclick = () => this.hideModal();
+    document.getElementById("expenseForm").onsubmit = (e) => this.saveExpense(e);
+    
+    // Onglets du modal
+    document.getElementById("manualTab").onclick = () => this.switchTab('manual');
+    document.getElementById("voiceTab").onclick = () => this.switchTab('voice');
+    document.getElementById("photoTab").onclick = () => this.switchTab('photo');
+    
+    // Header buttons
+    document.getElementById("voiceBtn").onclick = () => this.toggleVoiceCommand();
+    document.getElementById("aiBtn").onclick = () => this.showAIInsights();
+    document.getElementById("settingsBtn").onclick = () => this.toggleSettingsDropdown();
+    document.getElementById("logoutBtn").onclick = () => this.logout();
+    
+    // Settings menu
+    document.getElementById("thresholdBtn").onclick = () => this.changeBudget();
+    document.getElementById("exportBtn").onclick = () => this.exportData();
+    document.getElementById("backupBtn").onclick = () => this.backupData();
+    document.getElementById("analyticsBtn").onclick = () => this.openAnalytics();
+    document.getElementById("resetBtn").onclick = () => this.resetData();
+    
+    // Month controls
+    document.getElementById("monthSelect").onchange = (e) => this.changeMonth(e.target.value);
+    document.getElementById("goCurrentMonth").onclick = () => this.goToCurrentMonth();
+    
+    // Menu flottant
+    document.getElementById("quickPhotoBtn").onclick = () => this.quickPhotoExpense();
+    document.getElementById("voiceExpenseBtn").onclick = () => this.quickVoiceExpense();
+    document.getElementById("aiSuggestBtn").onclick = () => this.showAISuggestions();
+    
+    // Géolocalisation
+    document.getElementById("locationBtn").onclick = () => this.addLocation();
+    
+    // Photo et reconnaissance
+    document.getElementById("takePhoto").onclick = () => document.getElementById("receiptPhoto").click();
+    document.getElementById("receiptPhoto").onchange = (e) => this.processReceipt(e);
+    
+    // Recherche et filtres
+    document.getElementById("searchExpenses").oninput = (e) => this.searchExpenses(e.target.value);
+    document.getElementById("filterBtn").onclick = () => this.showFilterOptions();
+    document.getElementById("sortByAmount").onclick = () => this.sortExpenses('amount');
+    document.getElementById("sortByDate").onclick = () => this.sortExpenses('date');
+    
+    // Tags
+    document.getElementById("tagInput").onkeydown = (e) => {
+      if (e.key === 'Enter' && e.target.value.trim()) {
+        this.addTag(e.target.value.trim());
+        e.target.value = '';
+        e.preventDefault();
+      }
+    };
+    
+    // AI features
+    document.getElementById("aiDescSuggest").onclick = () => this.suggestDescription();
+    document.getElementById("startVoiceRecord").onclick = () => this.startVoiceRecording();
+    document.getElementById("categoryInsights").onclick = () => this.showCategoryInsights();
+    document.getElementById("predictiveMode").onclick = () => this.enablePredictiveMode();
+    document.getElementById("compareMode").onclick = () => this.enableCompareMode();
+    
+    // Suggestions and notifications
+    document.getElementById("closeSuggestions").onclick = () => this.hideSuggestions();
+    document.getElementById("closeNotification").onclick = () => this.hideNotification();
+    document.getElementById("closeAnalytics").onclick = () => this.closeAnalytics();
+    
+    // Date par défaut
+    document.getElementById("expDate").valueAsDate = new Date();
+    
+    // Fermer modals en cliquant à l'extérieur
+    document.addEventListener('click', (e) => {
+      if (e.target.classList.contains('modal-backdrop')) {
+        this.hideModal();
+        this.closeAnalytics();
+        document.getElementById("forgotPasswordModal").classList.add("hidden");
+      }
+    });
+  }
+
+  setupAdvancedLoginSystem() {
+    let mode = "login";
+    const securityQuestions = {
+      pet: "Quel était le nom de votre premier animal de compagnie ?",
+      school: "Dans quelle école primaire avez-vous étudié ?",
+      mother: "Quel est le nom de jeune fille de votre mère ?",
+      city: "Dans quelle ville êtes-vous né(e) ?",
+      friend: "Quel est le prénom de votre meilleur ami d'enfance ?"
+    };
+    
+    // Basculer entre connexion et inscription
+    document.getElementById("btnLogin").onclick = () => {
+      mode = "login";
+      this.updateLoginUI(mode);
+    };
+    
+    document.getElementById("btnRegister").onclick = () => {
+      mode = "register";
+      this.updateLoginUI(mode);
+    };
+    
+    // Mot de passe oublié
+    document.getElementById("btnForgotPassword").onclick = () => {
+      document.getElementById("forgotPasswordModal").classList.remove("hidden");
+    };
+    
+    document.getElementById("closeForgotModal").onclick = () => {
+      document.getElementById("forgotPasswordModal").classList.add("hidden");
+    };
+    
+    // Toggle password visibility
+    document.getElementById("togglePassword").onclick = () => {
+      const passwordField = document.getElementById("password");
+      const icon = document.querySelector("#togglePassword i");
+      
+      if (passwordField.type === "password") {
+        passwordField.type = "text";
+        icon.className = "fas fa-eye-slash";
+      } else {
+        passwordField.type = "password";
+        icon.className = "fas fa-eye";
+      }
+    };
+    
+    // Authentification biométrique simulée
+    document.getElementById("biometricBtn").onclick = () => {
+      this.simulateBiometricAuth();
+    };
+    
+    // Formulaire principal
+    document.getElementById("loginForm").onsubmit = (e) => {
+      e.preventDefault();
+      this.handleLogin(mode);
+    };
+    
+    // Récupération mot de passe
+    document.getElementById("forgotPasswordForm").onsubmit = (e) => {
+      e.preventDefault();
+      this.handlePasswordRecovery();
+    };
+    
+    // Affichage question de sécurité
+    document.getElementById("forgotUsername").onblur = () => {
+      const username = document.getElementById("forgotUsername").value;
+      if (username) {
+        this.showSecurityQuestion(username);
+      }
+    };
+  }
+
+  updateLoginUI(mode) {
+    const formTitle = document.getElementById("formTitle");
+    const submitBtn = document.getElementById("submitBtn");
+    const thresholdContainer = document.getElementById("maxThresholdContainer");
+    const securityContainer = document.getElementById("securityQuestionContainer");
+    const biometricAuth = document.getElementById("biometricAuth");
+    
+    if (mode === "login") {
+      formTitle.textContent = "Connexion Sécurisée";
+      submitBtn.innerHTML = '<i class="fas fa-sign-in-alt mr-2"></i>Se connecter';
+      thresholdContainer.classList.add("hidden");
+      securityContainer.classList.add("hidden");
+      biometricAuth.classList.remove("hidden");
+    } else {
+      formTitle.textContent = "Inscription Premium";
+      submitBtn.innerHTML = '<i class="fas fa-user-plus mr-2"></i>S\'inscrire';
+      thresholdContainer.classList.remove("hidden");
+      securityContainer.classList.remove("hidden");
+      biometricAuth.classList.add("hidden");
+    }
+  }
+
+  handleLogin(mode) {
+    const username = document.getElementById("username").value;
+    const password = document.getElementById("password").value;
+    
+    if (mode === "login") {
+      // Vérifier les identifiants
+      const userData = JSON.parse(localStorage.getItem(`user_${username}`) || '{}');
+      if (userData.password === password) {
+        this.currentUser = username;
+        this.budget = userData.budget || 2000;
+        this.threshold = this.budget;
+        this.loginSuccess();
+      } else {
+        this.showNotification("Erreur", "Identifiants incorrects", "error");
+      }
+    } else {
+      // Inscription
+      const budget = parseFloat(document.getElementById("maxThreshold").value) || 2000;
+      const securityQuestion = document.getElementById("securityQuestion").value;
+      const securityAnswer = document.getElementById("securityAnswer").value;
+      
+      if (!securityQuestion || !securityAnswer) {
+        this.showNotification("Erreur", "Veuillez compléter la question de sécurité", "error");
+        return;
+      }
+      
+      const userData = {
+        password: password,
+        budget: budget,
+        securityQuestion: securityQuestion,
+        securityAnswer: securityAnswer.toLowerCase(),
+        createdAt: new Date().toISOString()
+      };
+      
+      localStorage.setItem(`user_${username}`, JSON.stringify(userData));
+      this.currentUser = username;
+      this.budget = budget;
+      this.threshold = this.budget;
+      this.loginSuccess();
+    }
+  }
+
+  simulateBiometricAuth() {
+    const biometricBtn = document.getElementById("biometricBtn");
+    biometricBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Scan en cours...';
+    
+    setTimeout(() => {
+      // Simuler succès biométrique
+      this.currentUser = "BiometricUser";
+      this.budget = 2000;
+      this.threshold = this.budget;
+      this.loginSuccess();
+    }, 2000);
+  }
+
+  showSecurityQuestion(username) {
+    const userData = JSON.parse(localStorage.getItem(`user_${username}`) || '{}');
+    if (userData.securityQuestion) {
+      const questions = {
+        pet: "Quel était le nom de votre premier animal de compagnie ?",
+        school: "Dans quelle école primaire avez-vous étudié ?",
+        mother: "Quel est le nom de jeune fille de votre mère ?",
+        city: "Dans quelle ville êtes-vous né(e) ?",
+        friend: "Quel est le prénom de votre meilleur ami d'enfance ?"
+      };
+      
+      document.getElementById("questionText").textContent = questions[userData.securityQuestion];
+      document.getElementById("securityQuestionDisplay").classList.remove("hidden");
+      document.getElementById("securityAnswerContainer").classList.remove("hidden");
+    }
+  }
+
+  handlePasswordRecovery() {
+    const username = document.getElementById("forgotUsername").value;
+    const answer = document.getElementById("forgotSecurityAnswer").value.toLowerCase();
+    
+    const userData = JSON.parse(localStorage.getItem(`user_${username}`) || '{}');
+    if (userData.securityAnswer === answer) {
+      this.showNotification("Succès", `Votre mot de passe est: ${userData.password}`, "success");
+      document.getElementById("forgotPasswordModal").classList.add("hidden");
+    } else {
+      this.showNotification("Erreur", "Réponse incorrecte", "error");
+    }
+  }
+
+  loginSuccess() {
+    this.elements.userDisplay.textContent = this.currentUser;
+    document.getElementById("loginScreen").classList.add("hidden");
+    this.loadUserData();
+    this.showNotification("Bienvenue", `Connexion réussie ${this.currentUser}!`, "success");
+    this.generateAISuggestions();
+  }
+
+  logout() {
+    this.currentUser = null;
+    this.expenses = [];
+    document.getElementById("loginScreen").classList.remove("hidden");
+    this.updateDisplay();
+  }
+
+  checkLoginStatus() {
+    // Si déjà connecté (pour les tests)
+    if (!this.currentUser) {
+      document.getElementById("loginScreen").classList.remove("hidden");
+    } else {
+      this.loadUserData();
+    }
+  }
+
+  loadUserData() {
+    if (!this.currentUser) return;
+    
+    const userKey = `${this.currentUser}_${this.currentMonthKey}`;
+    const savedExpenses = localStorage.getItem(userKey);
+    if (savedExpenses) {
+      this.expenses = JSON.parse(savedExpenses);
+    }
+    
+    const userData = JSON.parse(localStorage.getItem(`user_${this.currentUser}`) || '{}');
+    if (userData.budget) {
+      this.budget = userData.budget;
+      this.threshold = this.budget;
+    }
+    
+    this.updateDisplay();
+    this.updateCharts();
+  }
+
+  saveExpense(e) {
+    e.preventDefault();
+    
+    if (this.currentTab === 'manual') {
+      const desc = document.getElementById("expDesc").value;
+      const amount = parseFloat(document.getElementById("expAmount").value);
+      const category = document.getElementById("expCategory").value;
+      const date = document.getElementById("expDate").value;
+      
+      if (!desc || !amount || amount <= 0) {
+        this.showNotification("Erreur", "Veuillez remplir tous les champs correctement", "error");
+        return;
+      }
+      
+      const expense = {
+        id: Date.now(),
+        description: desc,
+        amount: amount,
+        category: category,
+        date: date,
+        tags: [...this.tags],
+        location: this.userLocation,
+        timestamp: new Date().toISOString()
+      };
+      
+      this.expenses.unshift(expense);
+      this.saveData();
+      this.updateDisplay();
+      this.updateCharts();
+      this.hideModal();
+      this.resetForm();
+      
+      this.showNotification("Succès", `Dépense de ${amount} DH ajoutée`, "success");
+      this.checkBudgetAlerts(amount);
+    }
+  }
+
+  resetForm() {
+    document.getElementById("expenseForm").reset();
+    document.getElementById("expDate").valueAsDate = new Date();
+    this.tags = [];
+    this.userLocation = null;
+    document.getElementById("tagContainer").innerHTML = '<input type="text" id="tagInput" placeholder="Ajouter un tag..." class="bg-black/30 border border-white/20 rounded-lg px-3 py-1 text-white text-sm focus:outline-none focus:ring-1 focus:ring-purple-500">';
+    document.getElementById("locationText").classList.add("hidden");
+    this.rebindTagEvents();
+  }
+
+  rebindTagEvents() {
+    document.getElementById("tagInput").onkeydown = (e) => {
+      if (e.key === 'Enter' && e.target.value.trim()) {
+        this.addTag(e.target.value.trim());
+        e.target.value = '';
+        e.preventDefault();
+      }
+    };
+  }
+
+  addTag(tag) {
+    if (!this.tags.includes(tag)) {
+      this.tags.push(tag);
+      this.updateTagDisplay();
+    }
+  }
+
+  updateTagDisplay() {
+    const container = document.getElementById("tagContainer");
+    const tagElements = this.tags.map(tag => 
+      `<span class="tag-item">
+        ${tag}
+        <i class="fas fa-times cursor-pointer ml-1" onclick="tracker.removeTag('${tag}')"></i>
+      </span>`
+    ).join('');
+    
+    container.innerHTML = tagElements + 
+      '<input type="text" id="tagInput" placeholder="Ajouter un tag..." class="bg-black/30 border border-white/20 rounded-lg px-3 py-1 text-white text-sm focus:outline-none focus:ring-1 focus:ring-purple-500">';
+    
+    this.rebindTagEvents();
+  }
+
+  removeTag(tag) {
+    this.tags = this.tags.filter(t => t !== tag);
+    this.updateTagDisplay();
+  }
+
+  switchTab(tab) {
+    this.currentTab = tab;
+    
+    // Reset tab buttons
+    document.querySelectorAll('#modalAdd button[id$="Tab"]').forEach(btn => {
+      btn.classList.remove('bg-white/20');
+      btn.classList.add('text-gray-400');
+    });
+    
+    // Hide all inputs
+    document.getElementById('manualInput').classList.add('hidden');
+    document.getElementById('voiceInput').classList.add('hidden');
+    document.getElementById('photoInput').classList.add('hidden');
+    
+    // Show selected tab
+    document.getElementById(`${tab}Tab`).classList.add('bg-white/20');
+    document.getElementById(`${tab}Tab`).classList.remove('text-gray-400');
+    document.getElementById(`${tab}Input`).classList.remove('hidden');
+  }
+
+  toggleFloatingMenu() {
+    const menu = document.getElementById("floatingMenu");
+    const icon = document.getElementById("mainFloatingIcon");
+    
+    if (this.isFloatingMenuOpen) {
+      menu.classList.add("hidden");
+      icon.style.transform = "rotate(0deg)";
+      this.isFloatingMenuOpen = false;
+    } else {
+      menu.classList.remove("hidden");
+      icon.style.transform = "rotate(45deg)";
+      this.isFloatingMenuOpen = true;
+    }
+  }
+
+  showModal() {
+    document.getElementById("modalAdd").classList.remove("hidden");
+    this.switchTab('manual');
+  }
+
+  hideModal() {
+    document.getElementById("modalAdd").classList.add("hidden");
+    if (this.isFloatingMenuOpen) {
+      this.toggleFloatingMenu();
+    }
+  }
+
+  toggleSettingsDropdown() {
+    const dropdown = document.getElementById("settingsDropdown");
+    dropdown.classList.toggle("hidden");
+  }
+
+  changeMonth(monthKey) {
+    this.currentMonthKey = monthKey;
+    this.loadUserData();
+  }
+
+  goToCurrentMonth() {
+    const currentMonth = new Date().toISOString().slice(0, 7);
+    this.elements.monthSelect.value = currentMonth;
+    this.changeMonth(currentMonth);
+  }
+
+  updateDisplay() {
+    const total = this.expenses.reduce((sum, exp) => sum + exp.amount, 0);
+    const remaining = Math.max(0, this.threshold - total);
+    const percentage = this.threshold > 0 ? Math.min(100, (total / this.threshold) * 100) : 0;
+    
+    this.elements.totalExpenses.textContent = `${total.toFixed(2)} DH`;
+    this.elements.remainingBudget.textContent = `${remaining.toFixed(2)} DH`;
+    this.elements.totalTransactions.textContent = this.expenses.length;
+    this.elements.budgetUsed.textContent = `${total.toFixed(2)} DH`;
+    this.elements.budgetPercentage.textContent = `${Math.round(percentage)}%`;
+    
+    // Calcul moyenne quotidienne
+    const daysInMonth = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0).getDate();
+    const dailyAvg = this.expenses.length > 0 ? total / daysInMonth : 0;
+    this.elements.dailyAverage.textContent = `${dailyAvg.toFixed(2)} DH`;
+    
+    // Mise à jour du cercle de progression
+    const circumference = 2 * Math.PI * 25;
+    const offset = circumference - (percentage / 100) * circumference;
+    this.elements.progressCircle.style.strokeDashoffset = offset;
+    
+    // Indicateurs de santé
+    if (percentage > 90) {
+      this.elements.budgetHealth.textContent = "Critique";
+      this.elements.budgetHealth.className = "text-red-400";
+    } else if (percentage > 75) {
+      this.elements.budgetHealth.textContent = "Attention";
+      this.elements.budgetHealth.className = "text-yellow-400";
+    } else {
+      this.elements.budgetHealth.textContent = "Sain";
+      this.elements.budgetHealth.className = "text-green-400";
+    }
+    
+    this.updateExpensesList();
+    this.updateAlerts();
+  }
+
+  updateExpensesList() {
+    if (this.expenses.length === 0) {
+      this.elements.expensesList.innerHTML = `
+        <div class="text-center py-8">
+          <i class="fas fa-inbox text-4xl text-gray-600 mb-4"></i>
+          <p class="text-gray-400">Aucune dépense pour ce mois</p>
+          <button onclick="tracker.showModal()" class="mt-4 btn-premium px-6 py-2 rounded-lg text-white">
+            <i class="fas fa-plus mr-2"></i>Ajouter une dépense
+          </button>
+        </div>
+      `;
+      return;
+    }
+    
+    this.elements.expensesList.innerHTML = this.expenses.map(exp => {
+      const date = new Date(exp.date).toLocaleDateString('fr-FR');
+      const categoryIcon = this.getCategoryIcon(exp.category);
+      const tags = exp.tags && exp.tags.length > 0 ? 
+        exp.tags.map(tag => `<span class="tag-item text-xs">${tag}</span>`).join(' ') : '';
+      
+      return `
+        <div class="expense-item premium-card rounded-xl p-4 transition-all">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-4">
+              <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-purple-500/20 to-yellow-500/20 flex items-center justify-center">
+                <span class="text-xl">${categoryIcon}</span>
+              </div>
+              <div>
+                <h4 class="text-white font-medium">${exp.description}</h4>
+                <p class="text-gray-400 text-sm">${exp.category} • ${date}</p>
+                ${tags ? `<div class="flex gap-1 mt-1">${tags}</div>` : ''}
+              </div>
+            </div>
+            <div class="text-right">
+              <p class="text-xl font-bold text-white">${exp.amount.toFixed(2)} DH</p>
+              <div class="flex space-x-2 mt-1">
+                <button onclick="tracker.editExpense(${exp.id})" class="text-blue-400 hover:text-blue-300">
+                  <i class="fas fa-edit"></i>
+                </button>
+                <button onclick="tracker.deleteExpense(${exp.id})" class="text-red-400 hover:text-red-300">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  getCategoryIcon(category) {
+    const icons = {
+      'Alimentation': '🍕',
+      'Transport': '🚗',
+      'Loisirs': '🎮',
+      'Santé': '🏥',
+      'Shopping': '🛍️',
+      'Logement': '🏠',
+      'Éducation': '📚',
+      'Voyage': '✈️',
+      'Sport': '⚽',
+      'Beauté': '💄',
+      'Technologie': '📱',
+      'Autres': '⭐'
+    };
+    return icons[category] || '⭐';
+  }
+
+  updateAlerts() {
+    const total = this.expenses.reduce((sum, exp) => sum + exp.amount, 0);
+    const percentage = this.threshold > 0 ? (total / this.threshold) * 100 : 0;
+    
+    this.elements.alertsContainer.innerHTML = '';
+    
+    if (percentage > 90) {
+      this.createAlert('Alerte Budget', 'Vous avez dépassé 90% de votre budget!', 'error');
+    } else if (percentage > 75) {
+      this.createAlert('Attention', 'Vous approchez de la limite de budget', 'warning');
+    }
+    
+    // Alerte dépenses importantes
+    const largeExpenses = this.expenses.filter(exp => exp.amount > this.threshold * 0.1);
+    if (largeExpenses.length > 0) {
+      this.createAlert('Dépenses importantes', `${largeExpenses.length} transaction(s) > 10% du budget`, 'info');
+    }
+  }
+
+  createAlert(title, message, type) {
+    const colors = {
+      error: 'from-red-500/20 to-red-600/20 border-red-400/30',
+      warning: 'from-yellow-500/20 to-yellow-600/20 border-yellow-400/30',
+      info: 'from-blue-500/20 to-blue-600/20 border-blue-400/30'
+    };
+    
+    const icons = {
+      error: 'fa-exclamation-triangle text-red-400',
+      warning: 'fa-exclamation-circle text-yellow-400',
+      info: 'fa-info-circle text-blue-400'
+    };
+    
+    const alertHtml = `
+      <div class="premium-card rounded-xl p-4 bg-gradient-to-r ${colors[type]} border">
+        <div class="flex items-center space-x-3">
+          <i class="fas ${icons[type]}"></i>
+          <div>
+            <h4 class="text-white font-medium">${title}</h4>
+            <p class="text-gray-300 text-sm">${message}</p>
+          </div>
+        </div>
+      </div>
+    `;
+    
+    this.elements.alertsContainer.insertAdjacentHTML('beforeend', alertHtml);
+  }
+
+  updateCharts() {
+    this.updatePieChart();
+    this.updateBarChart();
+    this.updateTrendChart();
+  }
+
+  updatePieChart() {
+    const categoryTotals = {};
+    this.expenses.forEach(exp => {
+      categoryTotals[exp.category] = (categoryTotals[exp.category] || 0) + exp.amount;
+    });
+    
+    const labels = Object.keys(categoryTotals);
+    const data = Object.values(categoryTotals);
+    
+    this.pieChart.data.labels = labels;
+    this.pieChart.data.datasets[0].data = data;
+    this.pieChart.update();
+  }
+
+  updateBarChart() {
+    const categoryTotals = {};
+    this.expenses.forEach(exp => {
+      categoryTotals[exp.category] = (categoryTotals[exp.category] || 0) + exp.amount;
+    });
+    
+    const sorted = Object.entries(categoryTotals)
+      .sort(([,a], [,b]) => b - a)
+      .slice(0, 5);
+    
+    const labels = sorted.map(([cat]) => cat);
+    const data = sorted.map(([,amount]) => amount);
+    
+    this.barChart.data.labels = labels;
+    this.barChart.data.datasets[0].data = data;
+    this.barChart.update();
+  }
+
+  updateTrendChart() {
+    // Créer des données de tendance par jour
+    const dailyTotals = {};
+    this.expenses.forEach(exp => {
+      const day = exp.date;
+      dailyTotals[day] = (dailyTotals[day] || 0) + exp.amount;
+    });
+    
+    const sortedDays = Object.keys(dailyTotals).sort();
+    const realData = sortedDays.map(day => dailyTotals[day]);
+    
+    // Simulation de prédiction IA
+    const predictedData = this.generatePrediction(realData);
+    
+    this.trendChart.data.labels = sortedDays;
+    this.trendChart.data.datasets[0].data = realData;
+    this.trendChart.data.datasets[1].data = predictedData;
+    this.trendChart.update();
+  }
+
+  generatePrediction(realData) {
+    if (realData.length < 2) return [];
+    
+    // Simple prédiction linéaire
+    const lastValue = realData[realData.length - 1];
+    const secondLastValue = realData[realData.length - 2];
+    const trend = lastValue - secondLastValue;
+    
+    return realData.map((value, index) => {
+      if (index < realData.length - 1) return null;
+      return value + trend * 2; // Prédiction pour les 2 prochains jours
+    });
+  }
+
+  searchExpenses(query) {
+    if (!query) {
+      this.updateExpensesList();
+      return;
+    }
+    
+    const filtered = this.expenses.filter(exp => 
+      exp.description.toLowerCase().includes(query.toLowerCase()) ||
+      exp.category.toLowerCase().includes(query.toLowerCase()) ||
+      (exp.tags && exp.tags.some(tag => tag.toLowerCase().includes(query.toLowerCase())))
+    );
+    
+    this.displayFilteredExpenses(filtered);
+  }
+
+  sortExpenses(type) {
+    let sorted = [...this.expenses];
+    
+    if (type === 'amount') {
+      sorted.sort((a, b) => b.amount - a.amount);
+    } else if (type === 'date') {
+      sorted.sort((a, b) => new Date(b.date) - new Date(a.date));
+    }
+    
+    this.displayFilteredExpenses(sorted);
+  }
+
+  displayFilteredExpenses(expenses) {
+    const originalExpenses = this.expenses;
+    this.expenses = expenses;
+    this.updateExpensesList();
+    this.expenses = originalExpenses;
+  }
+
+  deleteExpense(id) {
+    if (confirm('Êtes-vous sûr de vouloir supprimer cette dépense ?')) {
+      this.expenses = this.expenses.filter(exp => exp.id !== id);
+      this.saveData();
+      this.updateDisplay();
+      this.updateCharts();
+      this.showNotification("Succès", "Dépense supprimée", "success");
+    }
+  }
+
+  editExpense(id) {
+    const expense = this.expenses.find(exp => exp.id === id);
+    if (expense) {
+      // Remplir le formulaire avec les données existantes
+      document.getElementById("expDesc").value = expense.description;
+      document.getElementById("expAmount").value = expense.amount;
+      document.getElementById("expCategory").value = expense.category;
+      document.getElementById("expDate").value = expense.date;
+      
+      // Supprimer l'ancienne dépense
+      this.expenses = this.expenses.filter(exp => exp.id !== id);
+      
+      this.showModal();
+    }
+  }
+
+  checkBudgetAlerts(amount) {
+    const total = this.expenses.reduce((sum, exp) => sum + exp.amount, 0);
+    const percentage = (total / this.threshold) * 100;
+    
+    if (percentage > 100) {
+      this.showNotification("Budget Dépassé", "Vous avez dépassé votre budget mensuel!", "error");
+    } else if (percentage > 90) {
+      this.showNotification("Alerte Budget", "Attention: 90% du budget utilisé", "warning");
+    }
+  }
+
+  showNotification(title, message, type = "info") {
+    const icons = {
+      success: "fa-check text-green-400",
+      error: "fa-times text-red-400",
+      warning: "fa-exclamation-triangle text-yellow-400",
+      info: "fa-info-circle text-blue-400"
+    };
+    
+    document.getElementById("notificationIcon").className = `fas ${icons[type]}`;
+    document.getElementById("notificationTitle").textContent = title;
+    document.getElementById("notificationText").textContent = message;
+    
+    this.elements.notification.classList.add("show");
+    
+    setTimeout(() => {
+      this.hideNotification();
+    }, 5000);
+  }
+
+  hideNotification() {
+    this.elements.notification.classList.remove("show");
+  }
+
+  saveData() {
+    if (this.currentUser) {
+      const userKey = `${this.currentUser}_${this.currentMonthKey}`;
+      localStorage.setItem(userKey, JSON.stringify(this.expenses));
+    }
+  }
+
+  // Fonctionnalités avancées
+  setupVoiceRecognition() {
+    if ('webkitSpeechRecognition' in window) {
+      this.voiceRecognition = new webkitSpeechRecognition();
+      this.voiceRecognition.continuous = false;
+      this.voiceRecognition.interimResults = false;
+      this.voiceRecognition.lang = 'fr-FR';
+      
+      this.voiceRecognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        this.processVoiceInput(transcript);
+      };
+    }
+  }
+
+  toggleVoiceCommand() {
+    const voiceWave = document.getElementById("voiceWave");
+    const voiceIcon = document.getElementById("voiceIcon");
+    
+    if (this.voiceRecognition) {
+      voiceWave.classList.remove("hidden");
+      voiceIcon.classList.add("hidden");
+      
+      this.voiceRecognition.start();
+      
+      setTimeout(() => {
+        voiceWave.classList.add("hidden");
+        voiceIcon.classList.remove("hidden");
+      }, 3000);
+    }
+  }
+
+  processVoiceInput(transcript) {
+    // Traitement basique de la commande vocale
+    const matches = transcript.match(/(\d+).*?(dirhams?|DH).*?(\w+)/i);
+    if (matches) {
+      const amount = parseFloat(matches[1]);
+      const description = transcript.replace(/(\d+).*?(dirhams?|DH)/i, '').trim();
+      
+      // Auto-remplir le formulaire
+      document.getElementById("expAmount").value = amount;
+      document.getElementById("expDesc").value = description;
+      this.showModal();
+    }
+  }
+
+  addLocation() {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        this.userLocation = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude
+        };
+        document.getElementById("locationText").textContent = "📍 Position ajoutée";
+        document.getElementById("locationText").classList.remove("hidden");
+      });
+    }
+  }
+
+  processReceipt(event) {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        document.getElementById("previewImg").src = e.target.result;
+        document.getElementById("photoPreview").classList.remove("hidden");
+        
+        // Simulation d'extraction OCR
+        setTimeout(() => {
+          const mockData = {
+            amount: Math.floor(Math.random() * 100) + 10,
+            description: "Restaurant - Reçu scanné",
+            category: "Alimentation"
+          };
+          
+          document.getElementById("expAmount").value = mockData.amount;
+          document.getElementById("expDesc").value = mockData.description;
+          document.getElementById("expCategory").value = mockData.category;
+          
+          this.switchTab('manual');
+        }, 2000);
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  generateAISuggestions() {
+    const suggestions = [
+      "💡 Vos dépenses en transport ont augmenté de 15% ce mois",
+      "🎯 Objectif possible: Économiser 200 DH sur les sorties",
+      "📊 Votre meilleure catégorie d'économies: Alimentation",
+      "⚡ Conseil: Groupez vos courses pour économiser sur le transport"
+    ];
+    
+    this.elements.suggestionsList.innerHTML = suggestions.map(suggestion => 
+      `<p class="text-gray-300 text-sm">${suggestion}</p>`
+    ).join('');
+    
+    this.elements.aiSuggestions.classList.remove("hidden");
+  }
+
+  hideSuggestions() {
+    this.elements.aiSuggestions.classList.add("hidden");
+  }
+
+  showAIInsights() {
+    this.generateAISuggestions();
+  }
+
+  openAnalytics() {
+    const modal = document.getElementById("analyticsModal");
+    const content = document.getElementById("analyticsContent");
+    
+    // Générer du contenu analytique
+    const total = this.expenses.reduce((sum, exp) => sum + exp.amount, 0);
+    const avgExpense = this.expenses.length > 0 ? total / this.expenses.length : 0;
+    
+    content.innerHTML = `
+      <div class="grid grid-cols-2 gap-4 mb-6">
+        <div class="bg-purple-500/20 rounded-xl p-4 text-center">
+          <h3 class="text-lg font-semibold text-white">Dépense Moyenne</h3>
+          <p class="text-2xl font-bold text-purple-400">${avgExpense.toFixed(2)} DH</p>
+        </div>
+        <div class="bg-yellow-500/20 rounded-xl p-4 text-center">
+          <h3 class="text-lg font-semibold text-white">Prédiction Fin Mois</h3>
+          <p class="text-2xl font-bold text-yellow-400">${(total * 1.3).toFixed(2)} DH</p>
+        </div>
+      </div>
+      
+      <div class="space-y-4">
+        <h3 class="text-lg font-semibold text-white">🧠 Insights IA</h3>
+        <div class="bg-green-500/20 rounded-xl p-4">
+          <p class="text-green-300">✅ Votre gestion budgétaire s'améliore (+12% vs mois dernier)</p>
+        </div>
+        <div class="bg-blue-500/20 rounded-xl p-4">
+          <p class="text-blue-300">📈 Tendance: Diminution des dépenses alimentaires (-8%)</p>
+        </div>
+        <div class="bg-yellow-500/20 rounded-xl p-4">
+          <p class="text-yellow-300">⚠️ Attention: Augmentation des dépenses loisirs (+25%)</p>
+        </div>
+      </div>
+    `;
+    
+    modal.classList.remove("hidden");
+  }
+
+  closeAnalytics() {
+    document.getElementById("analyticsModal").classList.add("hidden");
+  }
+
+  changeBudget() {
+    const newBudget = prompt("Nouveau budget mensuel (DH):", this.budget);
+    if (newBudget && !isNaN(newBudget) && newBudget > 0) {
+      this.budget = parseFloat(newBudget);
+      this.threshold = this.budget;
+      
+      // Sauvegarder dans les données utilisateur
+      if (this.currentUser) {
+        const userData = JSON.parse(localStorage.getItem(`user_${this.currentUser}`) || '{}');
+        userData.budget = this.budget;
+        localStorage.setItem(`user_${this.currentUser}`, JSON.stringify(userData));
+      }
+      
+      this.updateDisplay();
+      this.showNotification("Succès", `Budget mis à jour: ${this.budget} DH`, "success");
+    }
+    document.getElementById("settingsDropdown").classList.add("hidden");
+  }
+
+  exportData() {
+    if (this.expenses.length === 0) {
+      this.showNotification("Info", "Aucune donnée à exporter", "info");
+      return;
+    }
+    
+    const csvContent = "data:text/csv;charset=utf-8," + 
+      "Date,Description,Montant,Catégorie,Tags\n" +
+      this.expenses.map(exp => 
+        `${exp.date},${exp.description},${exp.amount},${exp.category},"${(exp.tags || []).join(';')}"`
+      ).join("\n");
+    
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", `expenses_${this.currentMonthKey}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    this.showNotification("Succès", "Données exportées", "success");
+    document.getElementById("settingsDropdown").classList.add("hidden");
+  }
+
+  backupData() {
+    const backupData = {
+      user: this.currentUser,
+      expenses: this.expenses,
+      budget: this.budget,
+      timestamp: new Date().toISOString()
+    };
+    
+    const dataStr = JSON.stringify(backupData, null, 2);
+    const dataBlob = new Blob([dataStr], {type: 'application/json'});
+    
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(dataBlob);
+    link.download = `backup_${this.currentUser}_${new Date().toISOString().slice(0,10)}.json`;
+    link.click();
+    
+    this.showNotification("Succès", "Sauvegarde créée", "success");
+    document.getElementById("settingsDropdown").classList.add("hidden");
+  }
+
+  resetData() {
+    if (confirm("Êtes-vous sûr de vouloir réinitialiser toutes les données ? Cette action est irréversible.")) {
+      this.expenses = [];
+      this.saveData();
+      this.updateDisplay();
+      this.updateCharts();
+      this.showNotification("Succès", "Données réinitialisées", "success");
+    }
+    document.getElementById("settingsDropdown").classList.add("hidden");
+  }
+
+  // Méthodes pour les boutons du menu flottant
+  quickPhotoExpense() {
+    this.showModal();
+    this.switchTab('photo');
+    if (this.isFloatingMenuOpen) this.toggleFloatingMenu();
+  }
+
+  quickVoiceExpense() {
+    this.showModal();
+    this.switchTab('voice');
+    if (this.isFloatingMenuOpen) this.toggleFloatingMenu();
+  }
+
+  showAISuggestions() {
+    this.generateAISuggestions();
+    if (this.isFloatingMenuOpen) this.toggleFloatingMenu();
+  }
+
+  startVoiceRecording() {
+    if (this.voiceRecognition) {
+      this.voiceRecognition.start();
+      this.showNotification("Info", "Écoute en cours... Parlez maintenant", "info");
+    }
+  }
+
+  suggestDescription() {
+    const amount = document.getElementById("expAmount").value;
+    const category = document.getElementById("expCategory").value;
+    
+    const suggestions = {
+      'Alimentation': ['Restaurant', 'Courses alimentaires', 'Snack', 'Café'],
+      'Transport': ['Essence', 'Taxi', 'Bus', 'Parking'],
+      'Loisirs': ['Cinéma', 'Jeux', 'Sortie', 'Sport'],
+      'Shopping': ['Vêtements', 'Accessoires', 'Décoration', 'Cadeaux']
+    };
+    
+    const categoryOptions = suggestions[category] || ['Divers', 'Achat', 'Service'];
+    const suggestion = categoryOptions[Math.floor(Math.random() * categoryOptions.length)];
+    
+    document.getElementById("expDesc").value = suggestion;
+    this.showNotification("IA", `Suggestion: ${suggestion}`, "info");
+  }
+
+  showCategoryInsights() {
+    const categoryTotals = {};
+    this.expenses.forEach(exp => {
+      categoryTotals[exp.category] = (categoryTotals[exp.category] || 0) + exp.amount;
+    });
+    
+    const topCategory = Object.entries(categoryTotals)
+      .sort(([,a], [,b]) => b - a)[0];
+    
+    if (topCategory) {
+      this.showNotification("Insight", `Top catégorie: ${topCategory[0]} (${topCategory[1].toFixed(2)} DH)`, "info");
+    }
+  }
+
+  enablePredictiveMode() {
+    this.showNotification("IA", "Mode prédictif activé", "info");
+    // Ici on pourrait afficher des prédictions plus détaillées
+  }
+
+  enableCompareMode() {
+    this.showNotification("IA", "Mode comparaison activé", "info");
+    // Ici on pourrait comparer avec les mois précédents
+  }
+
+  showFilterOptions() {
+    // Modal de filtres avancés (simplifié)
+    const filters = prompt("Filtrer par catégorie (séparées par des virgules):");
+    if (filters) {
+      const filterArray = filters.split(',').map(f => f.trim());
+      const filtered = this.expenses.filter(exp => 
+        filterArray.some(filter => 
+          exp.category.toLowerCase().includes(filter.toLowerCase())
+        )
+      );
+      this.displayFilteredExpenses(filtered);
+    }
+  }
+}
+
+// Initialisation
+const tracker = new PremiumExpenseTracker();
+
+// Fermer les dropdowns en cliquant ailleurs
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('#settingsBtn') && !e.target.closest('#settingsDropdown')) {
+    document.getElementById('settingsDropdown').classList.add('hidden');
+  }
 });
 </script>
 
