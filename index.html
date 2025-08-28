@@ -1,341 +1,227 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<title>💰 Suivi Dépenses – Profil</title>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<style>
-body { font-family: 'Cairo', sans-serif; margin:0; background:#f4f6f8; color:#333; transition: background 0.3s, color 0.3s; }
-body.dark { background:#1e1e1e; color:#f0f0f0; }
-body.dark main { background:#2c2c2c; color:#f0f0f0; }
-body.dark input, body.dark select { background:#3a3a3a; color:white; border:1px solid #555; }
-body.dark button { color:white; }
-body.dark #depenses .depense { background:#3a3a3a; border-bottom:1px solid #555; }
-body.dark #depenses .depense:hover { background:#4a4a4a; }
-body.dark .progress-container { background:#555; }
-header { background:#102E50; color:white; padding:1rem; display:flex; justify-content:space-between; align-items:center; font-weight:bold; font-size:1.2rem; }
-main { max-width:900px; margin:2rem auto; padding:2rem; background:white; border-radius:16px; box-shadow:0 4px 20px rgba(0,0,0,0.1); transition: all 0.3s; }
-form { display:flex; gap:0.5rem; flex-wrap:wrap; margin-bottom:1rem; transition: all 0.3s; }
-input, button, select { padding:0.6rem 0.8rem; font-size:1rem; border-radius:8px; border:1px solid #ccc; transition: all 0.2s; }
-input:focus, select:focus { outline:none; border-color:#102E50; transform: scale(1.02); }
-button { background:#102E50; color:white; border:none; cursor:pointer; transition: all 0.2s; font-weight:600; }
-button:hover { background:#E78B48; transform: scale(1.05); box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
-#depenses { margin-top:1rem; max-height:250px; overflow-y:auto; border-top:1px solid #eee; }
-.depense { display:flex; justify-content:space-between; padding:0.7rem; border-bottom:1px solid #f1f1f1; border-radius:8px; margin-bottom:4px; background:#f8f9fc; transition: all 0.3s; }
-.depense.added { animation:slideIn 0.4s ease forwards; }
-.depense.removed { animation:fadeOut 0.4s ease forwards; }
-.depense:hover { background:#e2e6ea; }
-@keyframes slideIn { 0% {opacity:0; transform:translateX(-50px);} 100% {opacity:1; transform:translateX(0);} }
-@keyframes fadeOut { 0% {opacity:1;} 100% {opacity:0; transform:scale(0.8);} }
-canvas { max-width:350px; margin:1.5rem auto; display:block; transition: all 0.3s; }
-.progress-container { margin:1rem auto; background:#e9ecef; border-radius:20px; overflow:hidden; height:20px; width:100%; transition: all 0.3s; }
-.progress-bar { height:100%; width:0; transition: width 0.8s ease, background 0.8s ease; border-radius:20px; }
-.stats { text-align:center; font-size:1.2rem; margin-top:0.5rem; font-weight:bold; transition: all 0.3s; }
-#exportCSV, #reset { display:block; margin:0.8rem auto; width:50%; border-radius:12px; padding:0.8rem; font-size:1rem; font-weight:600; transition: all 0.2s; }
-#exportCSV { background:#F5C45E; color:#102E50; }
-#exportCSV:hover { background:#E78B48; color:white; transform:scale(1.05); }
-#reset { background:#BE3D2A; color:white; }
-#reset:hover { background:#E78B48; transform:scale(1.05); }
-#loginScreen { position:fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.6); display:flex; justify-content:center; align-items:center; transition: all 0.3s; }
-#loginScreen form { background:white; padding:2rem; border-radius:16px; box-shadow:0 4px 12px rgba(0,0,0,0.2); flex-direction:column; display:flex; gap:1rem; min-width:320px; font-family: 'Cairo', sans-serif; transition: all 0.3s; }
-#alerte { text-align:center; padding:0.7rem; border-radius:8px; margin-bottom:1rem; display:none; font-weight:bold; color:white; transition: opacity 0.4s; }
-#alerte.orange { background:#E78B48; }
-#alerte.rouge { background:#BE3D2A; }
-#headerRight button { padding:2px 6px; font-size:0.9rem; margin-left:10px; border-radius:8px; background:#F5C45E; color:#102E50; font-weight:600; transition: all 0.2s; }
-#headerRight button:hover { background:#E78B48; color:white; transform:scale(1.05);}
-#searchInput { flex:1; }
-#sortSelect { min-width:120px; }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Suivi des Dépenses</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root {
+      --bg: #f4f6f8;
+      --text: #333;
+      --card: #fff;
+      --accent: #4CAF50;
+    }
+    body.dark {
+      --bg: #121212;
+      --text: #f4f4f4;
+      --card: #1e1e1e;
+      --accent: #81C784;
+    }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem;
+      background: var(--card);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    header h1 {
+      font-size: 1.2rem;
+    }
+    header .greeting {
+      font-weight: bold;
+      font-size: 1rem;
+    }
+    main {
+      padding: 1rem;
+      max-width: 900px;
+      margin: auto;
+    }
+    h2 {
+      text-align: center;
+      margin: 1rem 0;
+      font-size: 1.3rem;
+    }
+    .card {
+      background: var(--card);
+      padding: 1rem;
+      margin-bottom: 1rem;
+      border-radius: 1rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .form-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    input, button, select {
+      padding: 0.7rem;
+      border: 1px solid #ccc;
+      border-radius: 0.5rem;
+      font-size: 1rem;
+      flex: 1;
+      min-width: 120px;
+    }
+    button {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    button:hover {
+      transform: scale(1.05);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+      font-size: 0.9rem;
+    }
+    table th, table td {
+      border: 1px solid #ddd;
+      padding: 0.6rem;
+      text-align: center;
+    }
+    canvas {
+      max-width: 100%;
+      height: auto;
+    }
+    .actions {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-top: 1rem;
+    }
+    @media (max-width: 600px) {
+      header h1 {
+        font-size: 1rem;
+      }
+      header .greeting {
+        font-size: 0.9rem;
+      }
+      table {
+        font-size: 0.8rem;
+      }
+      input, button, select {
+        font-size: 0.9rem;
+        padding: 0.6rem;
+      }
+    }
+  </style>
 </head>
 <body>
+  <header>
+    <div class="greeting">Bonjour Anas 👋</div>
+    <button onclick="toggleDarkMode()">🌙 Mode</button>
+  </header>
 
-<div id="loginScreen">
-  <form id="loginForm">
-    <h2 id="formTitle">Connexion</h2>
-    <div style="display:flex; justify-content:center; gap:1rem; margin-bottom:1rem;">
-      <button type="button" id="btnLogin" style="flex:1;">Connexion</button>
-      <button type="button" id="btnRegister" style="flex:1;">S'inscrire</button>
+  <main>
+    <h2>Votre suivi des dépenses</h2>
+
+    <div class="card">
+      <div class="form-group">
+        <input type="month" id="mois" />
+        <input type="number" id="depense" placeholder="Montant dépensé" />
+        <button onclick="ajouterDepense()">Ajouter</button>
+      </div>
     </div>
-    <input type="text" id="username" placeholder="Nom" required />
-    <input type="password" id="password" placeholder="Mot de passe" required />
-    <input type="number" id="maxThreshold" placeholder="Seuil max (MAD)" min="1" style="display:none;" />
-    <select id="secretQuestion" style="display:none;">
-      <option value="">-- Choisir une question secrète --</option>
-      <option value="animal">Quel est le nom de votre premier animal ?</option>
-      <option value="ville">Quelle est votre ville natale ?</option>
-      <option value="mere">Quel est le prénom de votre mère ?</option>
-    </select>
-    <input type="text" id="secretAnswer" placeholder="Réponse" style="display:none;" />
-    <button type="submit" id="submitBtn">Entrer</button>
-    <button type="button" id="forgotPasswordBtn" style="margin-top:0.5rem;">Mot de passe oublié ?</button>
-  </form>
-</div>
 
-<header>
-  <span id="welcomeMessage">Votre suivi des dépenses</span>
-  <span id="headerRight">
-    <span id="timeDisplay"></span> |
-    <span id="userDisplay"></span>
-    <button id="changeThresholdBtn" style="display:none;">Modifier seuil</button>
-    <button id="darkModeBtn">🌓 Dark Mode</button>
-    <button id="logoutBtn" style="display:none;">Se déconnecter</button>
-  </span>
-</header>
+    <div class="card">
+      <canvas id="pieChart"></canvas>
+    </div>
 
-<main>
-  <div id="alerte"></div>
+    <div class="card">
+      <table id="tableau">
+        <thead>
+          <tr>
+            <th>Mois</th>
+            <th>Dépenses</th>
+            <th>Restant</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+      <div class="actions">
+        <button onclick="exporterCSV()">📂 Exporter CSV</button>
+      </div>
+    </div>
+  </main>
 
-  <div style="margin-bottom:1rem;">
-    <label for="monthSelect">Mois:</label>
-    <input type="month" id="monthSelect">
-    <button id="goCurrentMonth">Mois courant</button>
-  </div>
+  <script>
+    let depenses = JSON.parse(localStorage.getItem("depenses")) || {};
+    let seuil = 1000; // fixe, non modifiable sur mois précédents
 
-  <form id="form">
-    <input type="text" id="label" placeholder="Description" required />
-    <input type="number" id="amount" placeholder="Montant (MAD)" required />
-    <button type="submit">Ajouter</button>
-  </form>
+    const ctx = document.getElementById("pieChart").getContext("2d");
+    let chart;
 
-  <div style="display:flex; gap:0.5rem; flex-wrap:wrap; margin-bottom:1rem;">
-    <input type="text" id="searchInput" placeholder="Rechercher..." />
-    <select id="sortSelect">
-      <option value="order">Ordre Ajout</option>
-      <option value="asc">Montant ↑</option>
-      <option value="desc">Montant ↓</option>
-    </select>
-  </div>
+    function renderChart() {
+      const mois = document.getElementById("mois").value || new Date().toISOString().slice(0,7);
+      const depenseMois = depenses[mois] || 0;
+      const restant = Math.max(seuil - depenseMois, 0);
 
-  <canvas id="myChart"></canvas>
-  <div class="progress-container"><div class="progress-bar" id="progressBar"></div></div>
-  <div class="stats" id="stats"></div>
+      if (chart) chart.destroy();
+      chart = new Chart(ctx, {
+        type: "pie",
+        data: {
+          labels: ["Dépenses", "Restant"],
+          datasets: [{
+            data: [depenseMois, restant],
+            backgroundColor: ["#E53935", "#43A047"]
+          }]
+        }
+      });
+    }
 
-  <div id="depenses"></div>
-  <button id="exportCSV">📄 Exporter CSV</button>
-  <button id="reset">♻ Réinitialiser</button>
-</main>
+    function ajouterDepense() {
+      const mois = document.getElementById("mois").value;
+      const montant = parseFloat(document.getElementById("depense").value);
+      if (!mois || isNaN(montant)) return;
+      depenses[mois] = (depenses[mois] || 0) + montant;
+      localStorage.setItem("depenses", JSON.stringify(depenses));
+      majTableau();
+      renderChart();
+      document.getElementById("depense").value = "";
+    }
 
-<script>
-let currentUser = null;
-let depenses = [];
-let SEUIL_MAX = 4000;
-let SEUIL_ROUGE = SEUIL_MAX*0.8;
-let currentMonthKey = new Date().toISOString().slice(0,7);
-const ctx = document.getElementById("myChart").getContext("2d");
-let chart;
+    function majTableau() {
+      const tbody = document.querySelector("#tableau tbody");
+      tbody.innerHTML = "";
+      for (const mois in depenses) {
+        const depenseMois = depenses[mois];
+        const restant = Math.max(seuil - depenseMois, 0);
+        tbody.innerHTML += `<tr><td>${mois}</td><td>${depenseMois} DH</td><td>${restant} DH</td></tr>`;
+      }
+    }
 
-// Heure dynamique
-function updateTime() {
-  const now = new Date();
-  const monthNames = ["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"];
-  document.getElementById("timeDisplay").textContent = monthNames[now.getMonth()] + " " + now.getFullYear() + " | " + now.toLocaleTimeString();
-}
-setInterval(updateTime,1000); updateTime();
+    function exporterCSV() {
+      let csv = "Mois,Dépenses,Restant\n";
+      for (const mois in depenses) {
+        const depenseMois = depenses[mois];
+        const restant = Math.max(seuil - depenseMois, 0);
+        csv += `${mois},${depenseMois},${restant}\n`;
+      }
+      const blob = new Blob([csv], { type: "text/csv" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "depenses.csv";
+      a.click();
+    }
 
-// Header utilisateur
-function majHeaderUser() {
-  const userSpan = document.getElementById("userDisplay");
-  const logoutBtn = document.getElementById("logoutBtn");
-  const changeBtn = document.getElementById("changeThresholdBtn");
-  const welcome = document.getElementById("welcomeMessage");
-  if(currentUser){
-    userSpan.textContent = currentUser;
-    logoutBtn.style.display = "inline-block";
-    changeBtn.style.display = "inline-block";
-    welcome.textContent = `Votre suivi des dépenses – Bonjour ${currentUser} !`;
-  } else {
-    userSpan.textContent = "";
-    logoutBtn.style.display = "none";
-    changeBtn.style.display = "none";
-    welcome.textContent = "Votre suivi des dépenses";
-  }
-}
-document.getElementById("logoutBtn").addEventListener("click", ()=>{
-  if(confirm("Voulez-vous vous déconnecter ?")){
-    currentUser=null; depenses=[]; document.getElementById("loginScreen").style.display="flex";
-    majHeaderUser(); document.getElementById("depenses").innerHTML=""; if(chart) chart.destroy();
-    document.getElementById("progressBar").style.width="0%"; document.getElementById("stats").innerHTML="";
-    document.getElementById("alerte").style.display="none";
-  }
-});
+    function toggleDarkMode() {
+      document.body.classList.toggle("dark");
+    }
 
-// Dark Mode
-document.getElementById("darkModeBtn").addEventListener("click", ()=>{
-  document.body.classList.toggle("dark");
-  document.getElementById("darkModeBtn").textContent = document.body.classList.contains("dark") ? "🌞 Light Mode" : "🌓 Dark Mode";
-});
-
-// Fonctions ajout / suppression dépense
-function ajouterDepense(label,amount){ depenses.push({label,amount}); sauvegarderMois(currentMonthKey); majListe(); majChart(); }
-function supprimer(i){ depenses.splice(i,1); sauvegarderMois(currentMonthKey); majListe(); majChart(); }
-
-// Formulaire ajout dépense
-document.getElementById("form").addEventListener("submit", e=>{
-  e.preventDefault();
-  const label=document.getElementById("label").value.trim();
-  const amount=parseFloat(document.getElementById("amount").value);
-  if(!label || amount<=0) return;
-  ajouterDepense(label,amount); e.target.reset();
-});
-
-// Liste avec tri/recherche
-function majListe(){
-  const div=document.getElementById("depenses"); div.innerHTML="";
-  let filtered=depenses.filter(d=>d.label.toLowerCase().includes(document.getElementById("searchInput").value.toLowerCase()));
-  const sortVal=document.getElementById("sortSelect").value;
-  if(sortVal==="asc") filtered.sort((a,b)=>a.amount-b.amount);
-  if(sortVal==="desc") filtered.sort((a,b)=>b.amount-a.amount);
-  filtered.forEach(d=>{
-    const e=document.createElement("div");
-    e.className="depense added";
-    e.innerHTML=`<span>${d.label} - <b>${d.amount} MAD</b></span> <button onclick="supprimer(${depenses.indexOf(d)})">❌</button>`;
-    div.appendChild(e);
-  });
-}
-document.getElementById("searchInput").addEventListener("input", majListe);
-document.getElementById("sortSelect").addEventListener("change", majListe);
-
-// Alertes
-function majAlerte(){
-  const total=depenses.reduce((s,d)=>s+d.amount,0);
-  const alerte=document.getElementById("alerte");
-  if(total>SEUIL_MAX){ alerte.textContent="⚠ Dépassement du seuil maximum !"; alerte.className="rouge"; alerte.style.display="block"; }
-  else if(total>SEUIL_MAX*0.8){ alerte.textContent="⚠ Attention : vous approchez du seuil maximum !"; alerte.className="orange"; alerte.style.display="block"; }
-  else{ alerte.style.display="none"; }
-}
-
-// Couleur Pie
-function getCouleur(total){
-  if(total<=SEUIL_MAX*0.8) return "#F5C45E";
-  if(total<=SEUIL_MAX) return "#E78B48";
-  return "#BE3D2A";
-}
-
-// Pie chart + barre
-function majChart(){
-  const total=depenses.reduce((s,d)=>s+d.amount,0);
-  const couleur=getCouleur(total);
-  const data={ labels:["Dépenses","Reste"], datasets:[{data:[Math.min(total,SEUIL_MAX), Math.max(SEUIL_MAX-total,0)], backgroundColor:[couleur,"#e9ecef"], borderWidth:1}] };
-  const options={ animation:{animateRotate:true,animateScale:true,duration:800} };
-  if(chart) chart.destroy();
-  chart=new Chart(ctx,{type:"pie",data,options});
-  const percent=Math.min((total/SEUIL_MAX)*100,100).toFixed(1);
-  document.getElementById("stats").innerHTML=`Total: <b>${total} MAD</b> / ${SEUIL_MAX} MAD (${percent}%)`;
-  const bar=document.getElementById("progressBar");
-  bar.style.transition="width 0.8s ease, background 0.8s ease";
-  bar.style.width=percent+"%"; bar.style.background=`linear-gradient(90deg,#F5C45E,#E78B48,#BE3D2A)`;
-  majAlerte();
-}
-
-// Export CSV
-document.getElementById("exportCSV").addEventListener("click", ()=>{
-  if(depenses.length===0){ alert("Aucune dépense à exporter."); return; }
-  let csvContent = "data:text/csv;charset=utf-8,Description,Montant\n";
-  depenses.forEach(d => { csvContent += `${d.label},${d.amount}\n`; });
-  const encodedUri = encodeURI(csvContent);
-  const link = document.createElement("a");
-  link.setAttribute("href", encodedUri);
-  link.setAttribute("download", `depenses_${currentUser}_${currentMonthKey}.csv`);
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-});
-
-// Réinitialiser
-document.getElementById("reset").addEventListener("click", ()=>{
-  if(confirm("Voulez-vous vraiment réinitialiser toutes les dépenses de ce mois ?")){ depenses=[]; sauvegarderMois(currentMonthKey); majListe(); majChart(); }
-});
-
-// Modifier seuil
-document.getElementById("changeThresholdBtn").addEventListener("click", ()=>{
-  const now = new Date(); const [year, month] = currentMonthKey.split("-").map(Number);
-  const isPast = (year < now.getFullYear()) || (year === now.getFullYear() && month < now.getMonth()+1);
-  if(isPast){ alert("Impossible de modifier le seuil sur les mois passés !"); return; }
-  const newThreshold=parseFloat(prompt("Entrez le nouveau seuil maximum (MAD) :", SEUIL_MAX));
-  if(isNaN(newThreshold) || newThreshold<=0){ alert("Seuil invalide"); return; }
-  SEUIL_MAX=newThreshold; const userData = JSON.parse(localStorage.getItem(`user_${currentUser}`));
-  userData.threshold = SEUIL_MAX;
-  localStorage.setItem(`user_${currentUser}`, JSON.stringify(userData));
-  SEUIL_ROUGE = SEUIL_MAX*0.8; majChart();
-});
-
-// Sauvegarder / charger mois
-function sauvegarderMois(monthKey){
-  const allDepenses = JSON.parse(localStorage.getItem(`depenses_${currentUser}`) || "{}");
-  allDepenses[monthKey] = depenses; localStorage.setItem(`depenses_${currentUser}`, JSON.stringify(allDepenses));
-}
-function chargerMois(monthKey){
-  const allDepenses = JSON.parse(localStorage.getItem(`depenses_${currentUser}`) || "{}");
-  depenses = allDepenses[monthKey] || [];
-  majListe(); majChart();
-  const now = new Date(); const [year, month] = monthKey.split("-").map(Number);
-  const isPast = (year < now.getFullYear()) || (year === now.getFullYear() && month < now.getMonth()+1);
-  document.getElementById("form").style.display = isPast ? "none" : "flex";
-  document.getElementById("reset").style.display = isPast ? "none" : "block";
-}
-document.getElementById("monthSelect").value = currentMonthKey;
-chargerMois(currentMonthKey);
-document.getElementById("monthSelect").addEventListener("change", ()=>{
-  currentMonthKey = document.getElementById("monthSelect").value;
-  chargerMois(currentMonthKey);
-});
-document.getElementById("goCurrentMonth").addEventListener("click", ()=>{
-  currentMonthKey = new Date().toISOString().slice(0,7);
-  document.getElementById("monthSelect").value=currentMonthKey;
-  chargerMois(currentMonthKey);
-});
-
-// Login / Inscription
-let mode="login";
-document.getElementById("btnLogin").addEventListener("click", ()=>{
-  mode="login"; document.getElementById("formTitle").textContent="Connexion";
-  document.getElementById("submitBtn").textContent="Entrer"; document.getElementById("maxThreshold").style.display="none";
-  document.getElementById("secretQuestion").style.display="none"; document.getElementById("secretAnswer").style.display="none";
-});
-document.getElementById("btnRegister").addEventListener("click", ()=>{
-  mode="register"; document.getElementById("formTitle").textContent="Inscription";
-  document.getElementById("submitBtn").textContent="S'inscrire"; document.getElementById("maxThreshold").style.display="block";
-  document.getElementById("secretQuestion").style.display="block"; document.getElementById("secretAnswer").style.display="block";
-});
-
-document.getElementById("loginForm").addEventListener("submit", e=>{
-  e.preventDefault();
-  const usernameInput=document.getElementById("username").value.trim();
-  const pwdInput=document.getElementById("password").value.trim();
-  const maxInput=parseFloat(document.getElementById("maxThreshold").value);
-  const question=document.getElementById("secretQuestion").value;
-  const answer=document.getElementById("secretAnswer").value.trim();
-  if(!usernameInput || !pwdInput){ alert("Nom et mot de passe requis"); return; }
-
-  if(mode==="register"){
-    if(localStorage.getItem(`user_${usernameInput}`)){ alert("Ce profil existe déjà."); return; }
-    if(isNaN(maxInput) || maxInput<=0){ alert("Seuil maximum invalide"); return; }
-    if(!question || !answer){ alert("Question et réponse secrète requises"); return; }
-    localStorage.setItem(`user_${usernameInput}`, JSON.stringify({password: pwdInput, threshold: maxInput, question, answer}));
-    localStorage.setItem(`depenses_${usernameInput}`,"{}");
-    currentUser=usernameInput; SEUIL_MAX=maxInput; SEUIL_ROUGE=SEUIL_MAX*0.8;
-  } else {
-    const data = JSON.parse(localStorage.getItem(`user_${usernameInput}`));
-    if(!data || data.password!==pwdInput){ alert("Nom ou mot de passe incorrect"); return; }
-    currentUser=usernameInput; SEUIL_MAX=data.threshold; SEUIL_ROUGE=SEUIL_MAX*0.8;
-  }
-
-  document.getElementById("loginScreen").style.display="none";
-  majHeaderUser(); currentMonthKey = new Date().toISOString().slice(0,7);
-  document.getElementById("monthSelect").value=currentMonthKey; chargerMois(currentMonthKey);
-});
-
-// Mot de passe oublié
-document.getElementById("forgotPasswordBtn").addEventListener("click", ()=>{
-  const username=document.getElementById("username").value.trim();
-  const userData = JSON.parse(localStorage.getItem(`user_${username}`));
-  if(!userData){ alert("Utilisateur non trouvé"); return; }
-  const answer = prompt(`${userData.question}`);
-  if(answer===userData.answer){ alert(`Votre mot de passe est : ${userData.password}`); }
-  else{ alert("Réponse incorrecte"); }
-});
-</script>
-
+    majTableau();
+    renderChart();
+  </script>
 </body>
 </html>
