@@ -2,78 +2,48 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Suivi des Dépenses</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
-    :root {
-      --bg: #f4f6f8;
-      --text: #333;
-      --card: #fff;
-      --accent: #4CAF50;
-    }
-    body.dark {
-      --bg: #121212;
-      --text: #f4f4f4;
-      --card: #1e1e1e;
-      --accent: #81C784;
-    }
     body {
-      margin: 0;
       font-family: Arial, sans-serif;
-      background: var(--bg);
-      color: var(--text);
+      margin: 0;
+      padding: 0;
+      background: #f4f4f9;
+      color: #333;
+      transition: background 0.3s, color 0.3s;
     }
     header {
+      padding: 1rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 1rem;
-      background: var(--card);
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      background: #6200ea;
+      color: white;
     }
     header h1 {
       font-size: 1.2rem;
     }
-    header .greeting {
-      font-weight: bold;
-      font-size: 1rem;
-    }
-    main {
+    .container {
       padding: 1rem;
-      max-width: 900px;
-      margin: auto;
     }
-    h2 {
-      text-align: center;
-      margin: 1rem 0;
-      font-size: 1.3rem;
-    }
-    .card {
-      background: var(--card);
-      padding: 1rem;
-      margin-bottom: 1rem;
-      border-radius: 1rem;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
-    .form-group {
+    form {
       display: flex;
       flex-wrap: wrap;
-      gap: 0.5rem;
+      gap: 10px;
+      margin-bottom: 1rem;
     }
-    input, button, select {
-      padding: 0.7rem;
+    input, select, button {
+      padding: 0.5rem;
+      border-radius: 6px;
       border: 1px solid #ccc;
-      border-radius: 0.5rem;
-      font-size: 1rem;
-      flex: 1;
-      min-width: 120px;
     }
     button {
-      background: var(--accent);
-      color: #fff;
-      border: none;
       cursor: pointer;
+      background: #6200ea;
+      color: white;
+      border: none;
       transition: transform 0.2s;
     }
     button:hover {
@@ -83,145 +53,183 @@
       width: 100%;
       border-collapse: collapse;
       margin-top: 1rem;
-      font-size: 0.9rem;
     }
-    table th, table td {
+    th, td {
+      padding: 0.8rem;
       border: 1px solid #ddd;
-      padding: 0.6rem;
-      text-align: center;
+      text-align: left;
     }
-    canvas {
-      max-width: 100%;
-      height: auto;
+    th {
+      background: #eee;
     }
-    .actions {
-      display: flex;
-      gap: 0.5rem;
-      flex-wrap: wrap;
-      margin-top: 1rem;
-    }
-    @media (max-width: 600px) {
-      header h1 {
-        font-size: 1rem;
-      }
-      header .greeting {
-        font-size: 0.9rem;
-      }
+
+    /* ✅ Responsive table en mode mobile (iPhone, etc.) */
+    @media (max-width: 768px) {
       table {
-        font-size: 0.8rem;
+        display: block;
+        border: 0;
       }
-      input, button, select {
-        font-size: 0.9rem;
-        padding: 0.6rem;
+      thead {
+        display: none;
       }
+      tr {
+        display: block;
+        margin-bottom: 1rem;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        padding: 0.5rem;
+        background: #fff;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      }
+      td {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.4rem 0.6rem;
+        border: none;
+        border-bottom: 1px solid #eee;
+      }
+      td:last-child {
+        border-bottom: none;
+      }
+      td::before {
+        content: attr(data-label);
+        font-weight: bold;
+        color: #333;
+      }
+    }
+
+    /* ✅ Dark Mode */
+    .dark {
+      background: #121212;
+      color: #f4f4f9;
+    }
+    .dark header {
+      background: #333;
+    }
+    .dark table, .dark td, .dark th {
+      border-color: #555;
+    }
+    .dark td::before {
+      color: #ddd;
     }
   </style>
 </head>
 <body>
   <header>
-    <div class="greeting">Bonjour Anas 👋</div>
-    <button onclick="toggleDarkMode()">🌙 Mode</button>
+    <h1>Bonjour Anas</h1>
+    <button id="toggleDark">🌙 Mode sombre</button>
   </header>
 
-  <main>
+  <div class="container">
     <h2>Votre suivi des dépenses</h2>
 
-    <div class="card">
-      <div class="form-group">
-        <input type="month" id="mois" />
-        <input type="number" id="depense" placeholder="Montant dépensé" />
-        <button onclick="ajouterDepense()">Ajouter</button>
-      </div>
-    </div>
+    <form id="expenseForm">
+      <input type="text" id="desc" placeholder="Description" required>
+      <input type="number" id="amount" placeholder="Montant (DH)" required>
+      <input type="date" id="date" required>
+      <select id="category">
+        <option>Alimentation</option>
+        <option>Transport</option>
+        <option>Logement</option>
+        <option>Loisirs</option>
+        <option>Autres</option>
+      </select>
+      <button type="submit">Ajouter</button>
+    </form>
 
-    <div class="card">
-      <canvas id="pieChart"></canvas>
-    </div>
+    <button id="exportCSV">📥 Exporter CSV</button>
 
-    <div class="card">
-      <table id="tableau">
-        <thead>
-          <tr>
-            <th>Mois</th>
-            <th>Dépenses</th>
-            <th>Restant</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-      <div class="actions">
-        <button onclick="exporterCSV()">📂 Exporter CSV</button>
-      </div>
-    </div>
-  </main>
+    <table>
+      <thead>
+        <tr>
+          <th>Description</th>
+          <th>Montant</th>
+          <th>Date</th>
+          <th>Catégorie</th>
+        </tr>
+      </thead>
+      <tbody id="expensesTable"></tbody>
+    </table>
+
+    <canvas id="expensesChart" style="max-width:400px; margin-top:20px;"></canvas>
+  </div>
 
   <script>
-    let depenses = JSON.parse(localStorage.getItem("depenses")) || {};
-    let seuil = 1000; // fixe, non modifiable sur mois précédents
+    const form = document.getElementById("expenseForm");
+    const table = document.getElementById("expensesTable");
+    const ctx = document.getElementById("expensesChart").getContext("2d");
+    const toggleDark = document.getElementById("toggleDark");
 
-    const ctx = document.getElementById("pieChart").getContext("2d");
+    let expenses = [];
     let chart;
 
-    function renderChart() {
-      const mois = document.getElementById("mois").value || new Date().toISOString().slice(0,7);
-      const depenseMois = depenses[mois] || 0;
-      const restant = Math.max(seuil - depenseMois, 0);
+    // Ajouter dépense
+    form.addEventListener("submit", e => {
+      e.preventDefault();
+      const desc = document.getElementById("desc").value;
+      const amount = parseFloat(document.getElementById("amount").value);
+      const date = document.getElementById("date").value;
+      const category = document.getElementById("category").value;
+
+      const exp = { desc, amount, date, category };
+      expenses.push(exp);
+      updateTable();
+      updateChart();
+      form.reset();
+    });
+
+    // Mettre à jour le tableau
+    function updateTable() {
+      table.innerHTML = "";
+      expenses.forEach(exp => {
+        const row = `<tr>
+          <td data-label="Description">${exp.desc}</td>
+          <td data-label="Montant">${exp.amount} DH</td>
+          <td data-label="Date">${exp.date}</td>
+          <td data-label="Catégorie">${exp.category}</td>
+        </tr>`;
+        table.innerHTML += row;
+      });
+    }
+
+    // Mettre à jour le graphique
+    function updateChart() {
+      const categories = {};
+      expenses.forEach(exp => {
+        categories[exp.category] = (categories[exp.category] || 0) + exp.amount;
+      });
 
       if (chart) chart.destroy();
       chart = new Chart(ctx, {
         type: "pie",
         data: {
-          labels: ["Dépenses", "Restant"],
+          labels: Object.keys(categories),
           datasets: [{
-            data: [depenseMois, restant],
-            backgroundColor: ["#E53935", "#43A047"]
+            data: Object.values(categories),
+            backgroundColor: ["#ff6384","#36a2eb","#ffcd56","#4caf50","#9966ff"]
           }]
         }
       });
     }
 
-    function ajouterDepense() {
-      const mois = document.getElementById("mois").value;
-      const montant = parseFloat(document.getElementById("depense").value);
-      if (!mois || isNaN(montant)) return;
-      depenses[mois] = (depenses[mois] || 0) + montant;
-      localStorage.setItem("depenses", JSON.stringify(depenses));
-      majTableau();
-      renderChart();
-      document.getElementById("depense").value = "";
-    }
-
-    function majTableau() {
-      const tbody = document.querySelector("#tableau tbody");
-      tbody.innerHTML = "";
-      for (const mois in depenses) {
-        const depenseMois = depenses[mois];
-        const restant = Math.max(seuil - depenseMois, 0);
-        tbody.innerHTML += `<tr><td>${mois}</td><td>${depenseMois} DH</td><td>${restant} DH</td></tr>`;
-      }
-    }
-
-    function exporterCSV() {
-      let csv = "Mois,Dépenses,Restant\n";
-      for (const mois in depenses) {
-        const depenseMois = depenses[mois];
-        const restant = Math.max(seuil - depenseMois, 0);
-        csv += `${mois},${depenseMois},${restant}\n`;
-      }
+    // Exporter CSV
+    document.getElementById("exportCSV").addEventListener("click", () => {
+      let csv = "Description,Montant,Date,Catégorie\n";
+      expenses.forEach(exp => {
+        csv += `${exp.desc},${exp.amount},${exp.date},${exp.category}\n`;
+      });
       const blob = new Blob([csv], { type: "text/csv" });
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
       a.download = "depenses.csv";
       a.click();
-    }
+    });
 
-    function toggleDarkMode() {
+    // Dark Mode
+    toggleDark.addEventListener("click", () => {
       document.body.classList.toggle("dark");
-    }
-
-    majTableau();
-    renderChart();
+    });
   </script>
 </body>
 </html>
